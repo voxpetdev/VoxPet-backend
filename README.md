@@ -8,6 +8,8 @@ API REST creada con **Node.js + Express** y **Turso/libSQL** para la gestión de
 - Autenticación con **JWT**.
 - Conexión a base de datos **Turso/libSQL**.
 - Estructura escalable con **Models**, **Services**, **Controllers** y **Middlewares**.
+- Seguridad con ayuda de **helmet**.
+- Documentación de la api por **swagger**
 
 ---
 
