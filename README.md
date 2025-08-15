@@ -8,8 +8,6 @@ API REST creada con **Node.js + Express** y **Turso/libSQL** para la gestión de
 - Autenticación con **JWT**.
 - Conexión a base de datos **Turso/libSQL**.
 - Estructura escalable con **Models**, **Services**, **Controllers** y **Middlewares**.
-- Configuración con `.env` usando soporte nativo de Node.js (`--env-file`).
-- Seguridad básica con **helmet** y control de CORS.
 
 ---
 
@@ -29,8 +27,6 @@ src/
 ## ▶ Scripts Disponibles
 
 ```bash
-Copiar
-Editar
 npm run dev     # Ejecuta el servidor en modo desarrollo con nodemon
 npm start       # Ejecuta el servidor en modo producción
 ```
