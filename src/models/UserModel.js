@@ -1,5 +1,5 @@
 import { tursoApp } from '../turso.config.js'
-import bcrypt, { hash } from 'bcrypt'
+import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 
 class UserModel {
@@ -47,6 +47,19 @@ class UserModel {
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error updating user.' }
+        }
+    }
+
+    async disable(userID) {
+        try {
+            await tursoApp.execute({
+                sql: 'UPDATE usuarios SET status = unabled WHERE id_usuario = ?',
+                args: [userID]
+            })
+            return { code: 201 }
+        } catch (error) {
+            console.error(error)
+            return { code: 500, message: 'Error unabling user.' }
         }
     }
 }
