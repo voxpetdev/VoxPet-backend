@@ -1,27 +1,38 @@
 import { tursoApp } from "#src/turso.config.js";
 
 async function up() {
+
   await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS rol (
-      id_rol TEXT PRIMARY KEY NOT NULL,
-      nombre TEXT NOT NULL,
-      especialidad TEXT NOT NULL
+    CREATE TABLE IF NOT EXISTS roles (
+      roleID TEXT PRIMARY KEY,
+      name TEXT NOT NULL
     );
   `);
 
   await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS usuarios (
-      id_usuario TEXT PRIMARY KEY NOT NULL,
-      nombre TEXT NOT NULL,
-      apellido TEXT NOT NULL,
-      tipo_documento TEXT NOT NULL,
-      numero_documento INTEGER NOT NULL,
-      id_rol TEXT NOT NULL,
-      numero_contacto TEXT NOT NULL,
-      correo_electronico TEXT UNIQUE NOT NULL,
-      direccion TEXT NOT NULL,
-      contrasena TEXT NOT NULL,
-      FOREIGN KEY (id_rol) REFERENCES rol(id_rol)
+    CREATE TABLE IF NOT EXISTS specialties (
+      specialtyID TEXT PRIMARY KEY,
+      name TEXT NOT NULL
+    );
+  `);
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS users (
+      userID TEXT PRIMARY KEY,
+      name TEXT NOT NULL,
+      last_name TEXT NOT NULL,
+      documentType TEXT NOT NULL,
+      document INTEGER NOT NULL,
+      roleID TEXT NOT NULL,
+      specialtyID TEXT,
+      phone INTEGER NOT NULL,
+      email TEXT UNIQUE NOT NULL,
+      address TEXT,
+      status TEXT NOT NULL,
+      password TEXT NOT NULL,
+      FOREIGN KEY (roleID) REFERENCES roles(roleID),
+      FOREIGN KEY (specialtyID) REFERENCES specialties(specialtyID)
+  
     );
   `);
 }
@@ -29,6 +40,7 @@ async function up() {
 up();
 
 async function down() {
-  await tursoApp.execute(`DROP TABLE IF EXISTS usuarios;`);
-  await tursoApp.execute(`DROP TABLE IF EXISTS rol;`);
+  await tursoApp.execute(`DROP TABLE IF EXISTS users;`);
+  await tursoApp.execute(`DROP TABLE IF EXISTS specialties;`);
+  await tursoApp.execute(`DROP TABLE IF EXISTS roles;`);
 }
