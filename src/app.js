@@ -1,4 +1,6 @@
 import { createClient } from '@libsql/client'
+import userRoutes from '#src/routes/userRoutes.js'
+import roleRoutes from './routes/roleRoutes.js'
 import express from 'express'
 import cors from 'cors'
 import morgan from 'morgan'
@@ -7,6 +9,7 @@ export class App {
     constructor() {
         this.app = express()
         this.port = process.env.PORT || 3000
+        this.apiRoute = '/api/v1'
 
         // this.connectDatabase()
         this.middlewares()
@@ -36,6 +39,8 @@ export class App {
         this.app.get("/", (req, res) => {
             res.send({ message: "API de VoxPet funcionando!" })
         })
+        this.app.use(`${this.apiRoute}/users`, userRoutes)
+        this.app.use(`${this.apiRoute}/roles`, roleRoutes)
     }
 
     errorHandler() {
