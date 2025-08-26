@@ -53,13 +53,13 @@ class UserModel {
     async disable(userID) {
         try {
             await tursoApp.execute({
-                sql: 'UPDATE usuarios SET status = unabled WHERE id_usuario = ?',
+                sql: 'UPDATE users SET status = SUSPENDED WHERE userID = ?',
                 args: [userID]
             })
             return { code: 201 }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error unabling user.' }
+            return { code: 500, message: 'Error disabling user.' }
         }
     }
 }
