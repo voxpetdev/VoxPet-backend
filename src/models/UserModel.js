@@ -1,5 +1,5 @@
 import { tursoApp } from '../turso.config.js'
-import bcrypt, { hash } from 'bcrypt'
+import bcrypt from 'bcrypt'
 import { v4 as uuid } from 'uuid'
 
 class UserModel {
@@ -9,7 +9,7 @@ class UserModel {
 
     async getAll() {
         try {
-            const res = await tursoApp.execute('SELECT * FROM usuarios')
+            const res = await tursoApp.execute('SELECT * FROM users')
             return { code: 200, records: res.rows }
         } catch (error) {
             console.error(error)
@@ -23,8 +23,8 @@ class UserModel {
             const userID = uuid()
             const hashedPassword = bcrypt.hashSync(password, this.saltRounds)
             await tursoApp.execute({
-                sql: "INSERT INTO usuarios values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                args: [userID, name, last_name, docType, docNumber, '30458c42-1a08-4637-bb3d-0b18524e0979', phone, email, address, hashedPassword]
+                sql: "INSERT INTO users values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                args: [userID, name, last_name, docType, docNumber, '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, email, address, 'INACTIVE', hashedPassword]
             })
 
             return { code: 200, message: 'User created successfully.' }
@@ -35,12 +35,12 @@ class UserModel {
     }
 
     async update(userID, data) {
-        const { name, last_name, email, roleID, docType, docNumber, phone, address, password } = data
+        const { name, last_name, email, roleID, specialityID, docType, docNumber, phone, address, status, password } = data
         const hashedPassword = bcrypt.hashSync(password, this.saltRounds)
         try {
             await tursoApp.execute({
-                sql: "UPDATE usuarios SET nombre = ?, apellido = ?, tipo_documento = ?, numero_documento = ?, id_rol = ?, numero_contacto = ?, correo_electronico = ?, direccion = ?, contrasena = ? WHERE id_usuario = ?",
-                args: [name, last_name, docType, docNumber, roleID, phone, email, address, hashedPassword, userID]
+                sql: "UPDATE users SET name = ?, last_name = ?, documentType = ?, document = ?, roleID = ?, specialtyID = ?, phone = ?, email = ?, address = ?, status = ?, password = ? WHERE userID = ?",
+                args: [name, last_name, docType, docNumber, roleID, specialityID, phone, email, address, status, hashedPassword, userID]
             })
             
             return { code: 201 }

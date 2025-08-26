@@ -3,7 +3,7 @@ import { tursoApp } from "#src/turso.config.js"
 class roleModel {
     async getAll() {
         try {
-            const res = await tursoApp.execute("SELECT * FROM rol")
+            const res = await tursoApp.execute("SELECT * FROM roles")
             return { code: 200, records: res.rows }
         } catch (error) {
             console.error(error)
@@ -14,7 +14,7 @@ class roleModel {
     async getById(roleID) {
         try {
             const res = await tursoApp.execute({
-                sql: "SELECT * FROM rol WHERE id_rol = ?",
+                sql: "SELECT * FROM roles WHERE roleID = ?",
                 args: [roleID]
             })
             return { code: 200, record: res.rows[0] }
