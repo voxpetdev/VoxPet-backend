@@ -1,4 +1,4 @@
-import UserModel from "#src/models/userModel.js"
+import UserModel from "#src/models/UserModel.js"
 
 class UserController {
     async getAll(req, res) {
@@ -13,7 +13,12 @@ class UserController {
 
     async update(req, res) {
         const data = await UserModel.update(req.params.id, req.body)
-        res.status(data.code).send(data)
+        res.status(data.code).send({ message: 'Usuario editado correctamente.' })
+    }
+
+    async disable(req, res) {
+        const data = await UserModel.disable(req.params.id)
+        res.status(data.code).send({  message: 'Usuario deshabilitado correctamente.' })
     }
 }
 

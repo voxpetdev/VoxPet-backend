@@ -49,6 +49,19 @@ class UserModel {
             return { code: 500, message: 'Error updating user.' }
         }
     }
+
+    async disable(userID) {
+        try {
+            await tursoApp.execute({
+                sql: 'UPDATE usuarios SET status = unabled WHERE id_usuario = ?',
+                args: [userID]
+            })
+            return { code: 201 }
+        } catch (error) {
+            console.error(error)
+            return { code: 500, message: 'Error unabling user.' }
+        }
+    }
 }
 
 export default new UserModel()
