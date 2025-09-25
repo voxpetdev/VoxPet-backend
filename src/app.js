@@ -1,8 +1,8 @@
 import { createClient } from '@libsql/client'
 import userRoutes from '#src/routes/userRoutes.js'
-import roleRoutes from './routes/roleRoutes.js'
+import roleRoutes from '#src/routes/roleRoutes.js'
+import authRoutes from '#src/routes/authRoutes.js'
 import express from 'express'
-import cors from 'cors'
 import morgan from 'morgan'
 
 export class App {
@@ -41,6 +41,7 @@ export class App {
         })
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
+        this.app.use(`${this.apiRoute}/auth`, authRoutes)
     }
 
     errorHandler() {
@@ -51,7 +52,7 @@ export class App {
     }
 
     listen() {
-        this.app.listen(this.port, () => {
+        this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor escuchando en http://localhost:${this.port}`);
         })
     }
