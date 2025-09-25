@@ -1,24 +1,26 @@
 import supabase from "#src/supabase.config.js"
+import UserModel from "./UserModel.js"
 
 class AuthModel {
     constructor() {}
 
-    async register(credentials) {
-        const { username, password } = credentials
+    async register(userData) {
+        const { email, password } = userData
         
-        if (!username || !password) return { code: 500, message: "El correo y la contraseña son requeridos!" }
+        if (!email || !password) return { code: 400, message: "El correo y la contraseña son requeridos!" }
 
         const { data, error } = await supabase.auth.signUp({
-            email: username,
+            email: email,
             password: password
         })
 
-        if (error) return { code: 500, message: error.message }
+        if (error) return { code: 400, message: error.message }
+
+        const userCreated = await UserModel.create({ userID: data.user.id, ...userData })
 
         return {
-            code: 201,
-            message: "Usuario registrado!",
-            record: data.user.id
+            code: userCreated.code,
+            message: userCreated.message
         }
     }
 

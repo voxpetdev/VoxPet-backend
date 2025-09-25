@@ -1,6 +1,5 @@
 import { tursoApp } from '../turso.config.js'
 import bcrypt from 'bcrypt'
-import { v4 as uuid } from 'uuid'
 
 class UserModel {
     constructor() {
@@ -18,13 +17,13 @@ class UserModel {
     }
 
     async create(data) {
-        const { name, last_name, email, docType, docNumber, phone, address, password } = data
+        const { userID, name, last_name, email, phone, password } = data
+        console.log(data)
         try {
-            const userID = uuid()
             const hashedPassword = bcrypt.hashSync(password, this.saltRounds)
             await tursoApp.execute({
-                sql: "INSERT INTO users values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                args: [userID, name, last_name, docType, docNumber, '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, email, address, 'INACTIVE', hashedPassword]
+                sql: "INSERT INTO users (userID, name, last_name, roleID, specialtyID, phone, email, password) values (?, ?, ?, ?, ?, ?, ?, ?)",
+                args: [userID, name, last_name, '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, email, hashedPassword]
             })
 
             return { code: 200, message: 'User created successfully.' }
