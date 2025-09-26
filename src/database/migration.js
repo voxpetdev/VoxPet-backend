@@ -35,6 +35,78 @@ async function up() {
   
     )
   `)
+
+   await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS especies (
+      especieID TEXT PRIMARY KEY,
+      tipo TEXT NOT NULL
+  
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS razas (
+      razaID TEXT PRIMARY KEY,
+      especieID TEXT NOT NULL,
+
+      nombre_raza TEXT NOT NULL,
+      FOREIGN KEY (especieID) REFERENCES especies(especieID)
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS sexos (
+      sexoID TEXT PRIMARY KEY,
+      sexo_mascota TEXT NOT NULL
+  
+    )
+  `)
+
+   await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS mascotas (
+      mascotasID TEXT PRIMARY KEY,
+      nombre TEXT NOT NULL,
+      aoellido TEXT,
+      peso INTEGER NOT NULL,
+      fecha_nacimiento DATE NOT NULL,
+      especieID TEXT NOT NULL,
+      razaID TEXT NOT NULL,
+      sexoID TEXT NOT NULL,
+      color TEXT,
+      FOREIGN KEY (especieID) REFERENCES especies(especieID),
+      FOREIGN KEY (razaID) REFERENCES razas(razaID),
+      FOREIGN KEY (sexoID) REFERENCES sexos(sexoID)
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS citas (
+      citasID TEXT PRIMARY KEY,
+      fecha DATE NOT NULL,
+      mascotaID TEXT NOT NULL,
+      userID TEXT NOT NULL,
+      consulta TEXT,
+      lugar TEXT,
+      observaciones TEXT,
+      FOREIGN KEY (userID) REFERENCES users(userID),
+      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
+  
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS histroria_clinica (
+      chistroria_clinicaID TEXT PRIMARY KEY,
+      fecha DATE NOT NULL,
+      radicado INTEGER NOT NULL,
+      motivo TEXT,
+      descripcion TEXT,
+      mascotaID TEXT,
+      observaciones TEXT,
+      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
+  
+    )
+  `)
   console.log("Tablas creadas")
   } catch (error) {
     console.error(error)
