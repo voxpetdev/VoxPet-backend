@@ -42,7 +42,11 @@ class AuthModel {
 
         return {
             code: 201,
-            records: data
+            access_token: data.session.access_token,
+            user: {
+                id: data.user.id,
+                email: data.user.email
+            }
         }
     }
 }

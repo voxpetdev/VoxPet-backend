@@ -18,7 +18,6 @@ class UserModel {
 
     async create(data) {
         const { userID, name, last_name, email, phone, password } = data
-        console.log(data)
         try {
             const hashedPassword = bcrypt.hashSync(password, this.saltRounds)
             await tursoApp.execute({
