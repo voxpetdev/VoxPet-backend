@@ -1,4 +1,5 @@
 import supabase from "#src/supabase.config.js"
+import { tursoApp } from "#src/turso.config.js"
 import UserModel from "./UserModel.js"
 
 class AuthModel {
@@ -40,12 +41,20 @@ class AuthModel {
             }
         }
 
+        const query = await tursoApp.execute(`SELECT * FROM users WHERE userID = '${data.user.id}'`)
+
+        const user = query.rows[0]
+
+        console.log(user)
+
         return {
             code: 201,
             access_token: data.session.access_token,
             user: {
                 id: data.user.id,
-                email: data.user.email
+                email: data.user.email,
+                name: user.name,
+                phone: user.phone
             }
         }
     }
