@@ -66,7 +66,7 @@ async function up() {
     CREATE TABLE IF NOT EXISTS mascotas (
       mascotasID TEXT PRIMARY KEY,
       nombre TEXT NOT NULL,
-      aoellido TEXT,
+      apellido TEXT,
       peso INTEGER NOT NULL,
       fecha_nacimiento DATE NOT NULL,
       especieID TEXT NOT NULL,
@@ -96,7 +96,7 @@ async function up() {
 
   await tursoApp.execute(`
     CREATE TABLE IF NOT EXISTS histroria_clinica (
-      chistroria_clinicaID TEXT PRIMARY KEY,
+      histroria_clinicaID TEXT PRIMARY KEY,
       fecha DATE NOT NULL,
       radicado INTEGER NOT NULL,
       motivo TEXT,
