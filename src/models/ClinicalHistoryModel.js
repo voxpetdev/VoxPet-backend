@@ -48,7 +48,7 @@ class ClinicalHistoryModel {
         const { reason, description, observations } = data
         try {
             await tursoApp.execute({
-                sql: `UPDATE pets
+                sql: `UPDATE medical_history
                       SET reason = ?, description = ?, observations = ?
                       WHERE medical_historyID = ?`,
                 args: [reason, description, observations, medical_historyID]
@@ -64,7 +64,7 @@ class ClinicalHistoryModel {
      async disable(medical_historyID) {
         try {
             await tursoApp.execute({
-                sql: 'UPDATE pets SET status = SUSPENDED WHERE medical_historyID = ?',
+                sql: 'UPDATE medical_history SET status = SUSPENDED WHERE medical_historyID = ?',
                 args: [medical_historyID]
             })
             return { code: 201 }
