@@ -37,87 +37,91 @@ async function up() {
   `)
 
    await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS species (
-      specieID TEXT PRIMARY KEY,
-      type TEXT NOT NULL
+    CREATE TABLE IF NOT EXISTS especies (
+      especieID TEXT PRIMARY KEY,
+      tipo TEXT NOT NULL
   
     )
   `)
 
   await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS breeds (
-      breedID TEXT PRIMARY KEY,
-      specieID TEXT NOT NULL,
-      breed_name  TEXT NOT NULL,
-      FOREIGN KEY (specieID) REFERENCES species(specieID)
-    )
-  `)
+    CREATE TABLE IF NOT EXISTS razas (
+      razaID TEXT PRIMARY KEY,
+      especieID TEXT NOT NULL,
 
-
-   await tursoApp.execute(`
-     CREATE TABLE IF NOT EXISTS pets (
-      petID TEXT PRIMARY KEY,
-      name TEXT NOT NULL,
-      last_name TEXT,
-      weight INTEGER NOT NULL,
-      birth_date DATE NOT NULL,
-      specieID TEXT NOT NULL,
-      breedID TEXT NOT NULL,
-      sex TEXT NOT NULL,
-      color TEXT,
-      FOREIGN KEY (specieID) REFERENCES species(specieID),
-      FOREIGN KEY (breedID) REFERENCES breeds(breedID)
+      nombre_raza TEXT NOT NULL,
+      FOREIGN KEY (especieID) REFERENCES especies(especieID)
     )
   `)
 
   await tursoApp.execute(`
-  CREATE TABLE IF NOT EXISTS appointments (
-    appointmentID TEXT PRIMARY KEY,
-    date DATE NOT NULL,
-    petID TEXT NOT NULL,
-    userID TEXT NOT NULL,
-    consultation TEXT,
-    place TEXT,
-    observations TEXT,
-    FOREIGN KEY (userID) REFERENCES users(userID),
-    FOREIGN KEY (petID) REFERENCES pets(petID)
-  )
-`)
+    CREATE TABLE IF NOT EXISTS sexos (
+      sexoID TEXT PRIMARY KEY,
+      sexo_mascota TEXT NOT NULL
+  
+    )
+  `)
 
- await tursoApp.execute(`
-  CREATE TABLE IF NOT EXISTS medical_history (
-    medical_historyID TEXT PRIMARY KEY,
-    date DATE NOT NULL,
-    record_number TEXT NOT NULL,
-    reason TEXT,
-    description TEXT,
-    petID TEXT,
-    observations TEXT,
-    FOREIGN KEY (petID) REFERENCES pets(petID)
-  )
-`)
-  console.log("Tables created successfully")
+   await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS mascotas (
+      mascotasID TEXT PRIMARY KEY,
+      nombre TEXT NOT NULL,
+      aoellido TEXT,
+      peso INTEGER NOT NULL,
+      fecha_nacimiento DATE NOT NULL,
+      especieID TEXT NOT NULL,
+      razaID TEXT NOT NULL,
+      sexoID TEXT NOT NULL,
+      color TEXT,
+      FOREIGN KEY (especieID) REFERENCES especies(especieID),
+      FOREIGN KEY (razaID) REFERENCES razas(razaID),
+      FOREIGN KEY (sexoID) REFERENCES sexos(sexoID)
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS citas (
+      citasID TEXT PRIMARY KEY,
+      fecha DATE NOT NULL,
+      mascotaID TEXT NOT NULL,
+      userID TEXT NOT NULL,
+      consulta TEXT,
+      lugar TEXT,
+      observaciones TEXT,
+      FOREIGN KEY (userID) REFERENCES users(userID),
+      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
+  
+    )
+  `)
+
+  await tursoApp.execute(`
+    CREATE TABLE IF NOT EXISTS histroria_clinica (
+      chistroria_clinicaID TEXT PRIMARY KEY,
+      fecha DATE NOT NULL,
+      radicado INTEGER NOT NULL,
+      motivo TEXT,
+      descripcion TEXT,
+      mascotaID TEXT,
+      observaciones TEXT,
+      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
+  
+    )
+  `)
+  console.log("Tablas creadas")
   } catch (error) {
     console.error(error)
   }
 }
 
-
 up()
 
 async function down() {
- try {
-  // await tursoApp.execute(`DROP TABLE IF EXISTS appointments`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS medical_history`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS pets`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS breeds`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS species`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS users`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS specialties`)
-  // await tursoApp.execute(`DROP TABLE IF EXISTS roles`)
-  await tursoApp.execute(`DROP TABLE IF EXISTS `)
-  console.log("Tables deleted successfully")
-} catch (error) {
-  console.error(error)
-}
+  try {
+    await tursoApp.execute(`DROP TABLE IF EXISTS users`)
+    await tursoApp.execute(`DROP TABLE IF EXISTS specialties`)
+    await tursoApp.execute(`DROP TABLE IF EXISTS roles`)
+    console.log("Tablas eliminadas")
+  } catch (error) {
+    console.error(error)
+  }
 }

@@ -4,8 +4,9 @@ import ClinicalHistoryController from '#src/controllers/ClinicalHistoryControlle
 const router = Router()
 
 router.get('/', ClinicalHistoryController.getAll)
+router.get('/:id', ClinicalHistoryController.getById)
 router.post('/', ClinicalHistoryController.create)
 router.put('/:id', ClinicalHistoryController.update)
-router.delete('/:id', ClinicalHistoryController.disable)
+router.delete('/:id', ClinicalHistoryController.delete)
 
 export default router
