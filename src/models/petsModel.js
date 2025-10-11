@@ -2,25 +2,24 @@ import { tursoApp } from '../turso.config.js'
 
 class petsModel {
     async getAll() {
-        const db = await tursoApp
+        
         try {
-            const res = await tursoApp.execute('SELECT * FROM mascotas')
-            return { code: 200, records: res.rows }
+            const query = await tursoApp.execute('SELECT * FROM pets')
+            return { code: 200, records: query.rows }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error getting pets.' }
         }
     }
 
-    async getById(mascotasID) {
-        const db = await tursoApp
+    async getById(petID) {
         try {
-            const res = await tursoApp.execute({
-                sql: 'SELECT * FROM mascotas WHERE mascotasID = ?',
-                args: [mascotasID]
+            const query = await tursoApp.execute({
+                sql: 'SELECT * FROM pets WHERE petID = ?',
+                args: [petID]
             })
             return res.rows.length > 0
-                ? { code: 200, record: res.rows[0] }
+                ? { code: 200, record: query.rows[0] }
                 : { code: 404, message: 'Pets not found.' }
         } catch (error) {
             console.error(error)
@@ -29,16 +28,15 @@ class petsModel {
     }
 
     async create(data) {
-        const db = await tursoApp
-        const { mascotasID, nombre, apellido, peso,  fecha_nacimiento, especieID, razaID, sexoID, color} = data
+        const { petID, name, last_name, weight,  birth_date, specieID, breedID, sex, color} = data
         try {
-            await tursoApp.execute({
-                sql: `INSERT INTO mascotas 
-                      (mascotasID, nombre, apellido, peso, fecha_nacimiento, especieID, razaID, sexoID, color)
-                      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-                args: [mascotasID, nombre, apellido, peso, fecha_nacimiento, especieID, razaID, sexoID, color]
+            const loquesea = await tursoApp.execute({
+                sql: `INSERT INTO pets 
+                      (petID, name, last_name, weight,  birth_date, specieID, breedID, sex, color)
+                      values (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+                args: [petID, name, last_name, weight,  birth_date, specieID, breedID, sex, color]
             })
-
+            console.log(loquesea)
             return { code: 200, message: 'Pet created successfully.' }
         } catch (error) {
             console.error(error)
@@ -46,15 +44,14 @@ class petsModel {
         }
     }
 
-    async update(mascotasID, data) {
-        const db = await tursoApp
-        const { nombre, apellido, peso, color } = data
+    async update(petID, data) {
+        const { name, last_name, weight, color } = data
         try {
             await tursoApp.execute({
-                sql: `UPDATE mascotas
-                      SET nombre = ?, apellido = ?, peso = ?, color = ?
-                      WHERE mascotasID = ?`,
-                args: [nombre, apellido, peso, color, mascotasID]
+                sql: `UPDATE pets
+                      SET name = ?, last_name = ?, weight = ?, color = ?
+                      WHERE petID = ?`,
+                args: [name, last_name, weight, color, petID]
             })
 
             return { code: 201, message: 'Pet updated successfully.' }
@@ -64,19 +61,18 @@ class petsModel {
         }
     }
 
-    async delete(mascotasID) {
-        const db = await tursoApp
+     async disable(petID) {
         try {
             await tursoApp.execute({
-                sql: 'DELETE FROM mascotas WHERE mascotasID = ?',
-                args: [mascotasID]
+                sql: 'UPDATE pets SET status = SUSPENDED WHERE petID = ?',
+                args: [petID]
             })
             return { code: 201 }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error deleting Pet.' }
+            return { code: 500, message: 'Error disabling user.' }
         }
     }
 }
 
-export default new ClinicalHistoryModel()
+export default new petsModel()
