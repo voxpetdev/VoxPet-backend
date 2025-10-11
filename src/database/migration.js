@@ -88,7 +88,7 @@ async function up() {
   CREATE TABLE IF NOT EXISTS medical_history (
     medical_historyID TEXT PRIMARY KEY,
     date DATE NOT NULL,
-    record_number INTEGER NOT NULL,
+    record_number TEXT NOT NULL,
     reason TEXT,
     description TEXT,
     petID TEXT,
@@ -102,6 +102,7 @@ async function up() {
   }
 }
 
+
 up()
 
 async function down() {
@@ -114,7 +115,7 @@ async function down() {
   // await tursoApp.execute(`DROP TABLE IF EXISTS users`)
   // await tursoApp.execute(`DROP TABLE IF EXISTS specialties`)
   // await tursoApp.execute(`DROP TABLE IF EXISTS roles`)
-  await tursoApp.execute(`DROP TABLE IF EXISTS histroria_clinica`)
+  await tursoApp.execute(`DROP TABLE IF EXISTS `)
   console.log("Tables deleted successfully")
 } catch (error) {
   console.error(error)
