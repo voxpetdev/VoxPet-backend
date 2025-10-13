@@ -80,34 +80,47 @@ async function up() {
   `)
 
   await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS citas (
-      citasID TEXT PRIMARY KEY,
-      fecha DATE NOT NULL,
-      mascotaID TEXT NOT NULL,
+    CREATE TABLE IF NOT EXISTS appointments (
+      appointmentID TEXT PRIMARY KEY,
+      date DATE NOT NULL,
+      petID TEXT NOT NULL,
       userID TEXT NOT NULL,
-      consulta TEXT,
-      lugar TEXT,
-      observaciones TEXT,
+      consultation TEXT,
+      place TEXT,
+      observations TEXT,
       FOREIGN KEY (userID) REFERENCES users(userID),
-      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
-  
+      FOREIGN KEY (petID) REFERENCES pets(petID)
     )
   `)
 
   await tursoApp.execute(`
-    CREATE TABLE IF NOT EXISTS histroria_clinica (
-      chistroria_clinicaID TEXT PRIMARY KEY,
-      fecha DATE NOT NULL,
-      radicado INTEGER NOT NULL,
-      motivo TEXT,
-      descripcion TEXT,
-      mascotaID TEXT,
-      observaciones TEXT,
-      FOREIGN KEY (mascotaID) REFERENCES mascotas(mascotaID)
-  
+    CREATE TABLE IF NOT EXISTS medical_history (
+      medical_historyID TEXT PRIMARY KEY,
+      date DATE NOT NULL,
+      record_number TEXT NOT NULL,
+      reason TEXT,
+      description TEXT,
+      petID TEXT,
+      observations TEXT,
+      FOREIGN KEY (petID) REFERENCES pets(petID)
     )
   `)
-  console.log("Tablas creadas")
+
+   await tursoApp.execute(`
+   CREATE TABLE IF NOT EXISTS treatments (
+     treatmentID TEXT PRIMARY KEY,
+     medical_historyID TEXT NOT NULL,
+     treatment_name TEXT NOT NULL,
+     description TEXT,
+     start_date DATE NOT NULL,
+     end_date DATE,
+     dosage TEXT,
+     frequency TEXT,
+     observations TEXT,
+     FOREIGN KEY (medical_historyID) REFERENCES medical_history(medical_historyID)
+    )
+  `)
+  console.log("Tables created successfully")
   } catch (error) {
     console.error(error)
   }

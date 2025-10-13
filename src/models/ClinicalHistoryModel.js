@@ -47,10 +47,10 @@ class ClinicalHistoryModel {
         const { fecha, radicado, motivo, descripcion, mascotaID, observaciones } = data
         try {
             await tursoApp.execute({
-                sql: `UPDATE historia_clinica 
-                      SET fecha = ?, radicado = ?, motivo = ?, descripcion = ?, mascotaID = ?, observaciones = ?
-                      WHERE clinicalHistoryID = ?`,
-                args: [fecha, radicado, motivo, descripcion, mascotaID, observaciones, clinicalHistoryID]
+                sql: `UPDATE medical_history
+                      SET reason = ?, description = ?, observations = ?
+                      WHERE medical_historyID = ?`,
+                args: [reason, description, observations, medical_historyID]
             })
 
             return { code: 201 }
@@ -63,8 +63,8 @@ class ClinicalHistoryModel {
     async delete(clinicalHistoryID) {
         try {
             await tursoApp.execute({
-                sql: 'DELETE FROM historia_clinica WHERE clinicalHistoryID = ?',
-                args: [clinicalHistoryID]
+                sql: 'UPDATE medical_history SET status = SUSPENDED WHERE medical_historyID = ?',
+                args: [medical_historyID]
             })
             return { code: 201 }
         } catch (error) {

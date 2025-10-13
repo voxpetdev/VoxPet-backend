@@ -3,6 +3,9 @@ import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
 import DatesRoutes from '#src/routes/DatesRoutes.js'
+import petsRoutes from '#src/routes/petsRoutes.js'
+import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
+import treatmentRoutes from '#src/routes/treatmentRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 
@@ -44,6 +47,9 @@ export class App {
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
+        this.app.use(`${this.apiRoute}/pets`, petsRoutes)
+        this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
+        this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
     }
 
     errorHandler() {
