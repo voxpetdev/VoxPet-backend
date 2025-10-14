@@ -111,6 +111,19 @@ async function up() {
      FOREIGN KEY (medical_historyID) REFERENCES medical_history(medical_historyID)
     )
   `)
+  await tursoApp.execute(`
+   CREATE TABLE IF NOT EXISTS vaccines (
+      vaccineID TEXT PRIMARY KEY,
+      medical_historyID TEXT NOT NULL,
+      vaccine_name TEXT NOT NULL,
+      description TEXT,
+      application_date DATE NOT NULL,
+      next_date DATE,
+      dosage TEXT,
+      observations TEXT,
+      FOREIGN KEY (medical_historyID) REFERENCES medical_history(medical_historyID)
+    )
+  `)
   console.log("Tables created successfully")
   } catch (error) {
     console.error(error)
@@ -130,6 +143,7 @@ async function down() {
   // await tursoApp.execute(`DROP TABLE IF EXISTS users`)
   // await tursoApp.execute(`DROP TABLE IF EXISTS specialties`)
   // await tursoApp.execute(`DROP TABLE IF EXISTS roles`)
+  // await tursoApp.execute(`DROP TABLE IF EXISTS treatments`)
   await tursoApp.execute(`DROP TABLE IF EXISTS `)
   console.log("Tables deleted successfully")
 } catch (error) {
