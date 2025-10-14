@@ -6,6 +6,7 @@ import DatesRoutes from '#src/routes/DatesRoutes.js'
 import petsRoutes from '#src/routes/petsRoutes.js'
 import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
 import treatmentRoutes from '#src/routes/treatmentRoutes.js'
+import vaccinesRoutes from '#src/routes/vaccinesRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 
@@ -50,6 +51,7 @@ export class App {
         this.app.use(`${this.apiRoute}/pets`, petsRoutes)
         this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
         this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
+        this.app.use(`${this.apiRoute}/vaccines`, vaccinesRoutes)
     }
 
     errorHandler() {
