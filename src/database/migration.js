@@ -142,6 +142,7 @@ async function up() {
 up()
 
 async function down() {
+
   try {
     await tursoApp.execute(`DROP TABLE IF EXISTS users`)
     await tursoApp.execute(`DROP TABLE IF EXISTS specialties`)
