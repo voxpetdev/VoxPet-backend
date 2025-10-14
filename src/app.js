@@ -1,11 +1,10 @@
-import { createClient } from '@libsql/client'
 import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
 import DatesRoutes from '#src/routes/DatesRoutes.js'
-import petsRoutes from '#src/routes/petsRoutes.js'
 import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
 import treatmentRoutes from '#src/routes/treatmentRoutes.js'
+import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
 
@@ -15,23 +14,9 @@ export class App {
         this.port = process.env.PORT || 3000
         this.apiRoute = '/api/v1'
 
-        // this.connectDatabase()
         this.middlewares()
         this.routes()
         this.errorHandler()
-    }
-
-    connectDatabase() {
-        try {
-            this.db = createClient({
-                url: process.env.DATABASE_URL,
-                authToken: process.env.DATABASE_AUTH_TOKEN
-            })
-            console.log("Conectado a la base de datos Turso/libSQL")
-        } catch (error) {
-            console.error("Error al conectarse a la base de datos:", error)
-            process.exit(1)
-        }
     }
 
     middlewares() {
@@ -43,11 +28,11 @@ export class App {
         this.app.get("/", (req, res) => {
             res.send({ message: "API de VoxPet funcionando!" })
         })
+        this.app.get('/health', (req, res) => { res.status(200).send({ success:true, message: 'Servidor funcionando correctamente', timestamp: new Date().toISOString() }) })
         this.app.use(`${this.apiRoute}/dates`, DatesRoutes)
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
-        this.app.use(`${this.apiRoute}/pets`, petsRoutes)
         this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
         this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
     }
@@ -59,9 +44,11 @@ export class App {
         })
     }
 
-    listen() {
+    async listen() {
+        // await InitializeDatabase()
         this.app.listen(this.port, '0.0.0.0', () => {
-            console.log(`🚀 Servidor escuchando en http://localhost:${this.port}`);
+            console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
+            console.log(`📊 Health check: http://localhost:${this.port}/health`)
         })
     }
 }

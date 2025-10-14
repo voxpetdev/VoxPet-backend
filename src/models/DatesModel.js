@@ -1,5 +1,4 @@
-import { tursoApp } from '../turso.config.js'
-import { v4 as uuid } from 'uuid'
+import { tursoApp } from "#src/config/turso.config.js"
 
 class DatesModel {
   async getAll() {

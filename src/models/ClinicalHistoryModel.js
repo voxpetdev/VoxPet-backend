@@ -1,10 +1,10 @@
-import { tursoApp } from '../turso.config.js'
+import { tursoApp } from "#src/config/turso.config.js"
 
 class ClinicalHistoryModel {
     async getAll() {
         try {
             const res = await tursoApp.execute('SELECT * FROM historia_clinica')
-            return { code: 200, records: res.rows }
+            return { code: 200, data: res.rows }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error getting clinical histories.' }
@@ -18,7 +18,7 @@ class ClinicalHistoryModel {
                 args: [clinicalHistoryID]
             })
             return res.rows.length > 0
-                ? { code: 200, record: res.rows[0] }
+                ? { code: 200, data: res.rows[0] }
                 : { code: 404, message: 'Clinical history not found.' }
         } catch (error) {
             console.error(error)

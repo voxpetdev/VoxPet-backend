@@ -1,5 +1,5 @@
-import supabase from "#src/supabase.config.js"
-import { tursoApp } from "#src/turso.config.js"
+import supabase from "#src/config/supabase.config.js"
+import { tursoApp } from "#src/config/turso.config.js"
 import UserModel from "./UserModel.js"
 
 class AuthModel {

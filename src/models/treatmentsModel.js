@@ -1,11 +1,11 @@
-import { tursoApp } from '../turso.config.js'
+import { tursoApp } from "#src/config/turso.config.js"
 
 class treatmentsModel {
     async getAll() {
         
         try {
             const query = await tursoApp.execute('SELECT * FROM treatments')
-            return { code: 200, records: query.rows }
+            return { code: 200, data: query.rows }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error getting treatments.' }
@@ -19,7 +19,7 @@ class treatmentsModel {
                 args: [treatmentID]
             })
             return res.rows.length > 0
-                ? { code: 200, record: query.rows[0] }
+                ? { code: 200, data: query.rows[0] }
                 : { code: 404, message: 'treatments not found.' }
         } catch (error) {
             console.error(error)

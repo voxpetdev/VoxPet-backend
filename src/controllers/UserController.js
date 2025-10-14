@@ -13,12 +13,12 @@ class UserController {
 
     async update(req, res) {
         const data = await UserModel.update(req.params.id, req.body)
-        res.status(data.code).send({ message: 'Usuario editado correctamente.' })
+        res.status(data.code).send(data)
     }
 
     async disable(req, res) {
         const data = await UserModel.disable(req.params.id)
-        res.status(data.code).send({  message: 'Usuario deshabilitado correctamente.' })
+        res.status(data.code).send(data)
     }
 }
 
