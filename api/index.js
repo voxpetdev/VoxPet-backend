@@ -5,5 +5,5 @@ const server = new App()
 
 // Vercel necesita una función handler compatible con (req, res)
 export default function handler(req, res) {
-  return server.getServer(req, res)
+  return server.app(req, res)
 }
