@@ -7,6 +7,7 @@ import treatmentRoutes from '#src/routes/treatmentRoutes.js'
 import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
+import cors from 'cors'
 
 export class App {
     constructor() {
@@ -22,11 +23,16 @@ export class App {
     middlewares() {
         this.app.use(morgan(process.env.LOG_FORMAT))
         this.app.use(express.json())
+        this.app.use(cors({
+            origin: '*',
+            methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+            allowedHeaders: ['Content-Type', 'Authorization']
+        }))
     }
 
     routes() {
         this.app.get("/", (req, res) => {
-            res.send({ message: "API de VoxPet funcionando!" })
+            res.send("<h1 style='h1 {margin: auto}'>Usuario confirmado correctamente, ahora puedes cerrar esta pestaña e iniciar sesión.</h1>")
         })
         this.app.get('/health', (req, res) => { res.status(200).send({ success:true, message: 'Servidor funcionando correctamente', timestamp: new Date().toISOString() }) })
         this.app.use(`${this.apiRoute}/dates`, DatesRoutes)

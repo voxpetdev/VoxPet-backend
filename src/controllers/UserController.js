@@ -7,7 +7,7 @@ class UserController {
     }
 
     async create(req, res) {
-        const data = await UserModel.create(req.body)
+        const data = await UserModel.createAsAdmin(req.body)
         res.status(data.code).send(data)
     }
 

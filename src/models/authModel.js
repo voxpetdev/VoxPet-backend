@@ -1,4 +1,4 @@
-import supabase from "#src/config/supabase.config.js"
+import { supabase } from "#src/config/supabase.config.js"
 import { tursoApp } from "#src/config/turso.config.js"
 import UserModel from "./UserModel.js"
 
@@ -7,7 +7,6 @@ class AuthModel {
 
     async register(userData) {
         const { email, password } = userData
-        
         if (!email || !password) return { code: 400, message: "El correo y la contraseña son requeridos!" }
 
         const { data, error } = await supabase.auth.signUp({
@@ -17,11 +16,17 @@ class AuthModel {
 
         if (error) return { code: 400, message: error.message }
 
-        const userCreated = await UserModel.create({ userID: data.user.id, ...userData })
+        if (data) {
+            const userCreated = await UserModel.create({ userID: data.user.id, ...userData })
+            return {
+                code: userCreated.code,
+                message: userCreated.message
+            }
+        }
 
         return {
-            code: userCreated.code,
-            message: userCreated.message
+            code: 500,
+            message: "Internal server error"
         }
     }
 
