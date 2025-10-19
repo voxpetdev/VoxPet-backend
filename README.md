@@ -29,8 +29,8 @@ src/
 ## ▶ Scripts Disponibles
 
 ```bash
-npm run dev     # Ejecuta el servidor en modo desarrollo (se actualiza con cada guardado)
-npm start       # Ejecuta el servidor en modo producción (no se actualiza)
+pnpm run dev     # Ejecuta el servidor en modo desarrollo (se actualiza con cada guardado)
+pnpm start       # Ejecuta el servidor en modo producción (no se actualiza)
 ```
 
 ## 📌 Endpoints
