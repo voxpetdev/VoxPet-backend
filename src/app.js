@@ -50,11 +50,15 @@ export default class App {
         })
     }
 
-    async listen() {
+    listen() {
         // await InitializeDatabase()
         this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
             console.log(`📊 Health check: http://localhost:${this.port}/health`)
         })
     }
+
+    getServer() {
+    return this.app
+  }
 }
