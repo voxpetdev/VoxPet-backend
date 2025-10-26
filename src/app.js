@@ -9,7 +9,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
-class App {
+export class App {
     constructor() {
         this.app = express()
         this.port = process.env.PORT || 3000
@@ -64,4 +64,4 @@ class App {
 }
 
 const appInstance = new App()
-export default appInstance.getServer()
+export const app = appInstance.getServer()

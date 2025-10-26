@@ -1,4 +1,4 @@
-import App from "./src/app.js"
+import { App } from "./src/app.js"
 
 const server = new App()
-server.app()
+server.listen()
