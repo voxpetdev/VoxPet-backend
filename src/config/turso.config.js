@@ -29,6 +29,7 @@ export async function InitializeDatabase() {
         userID TEXT PRIMARY KEY,
         name TEXT NOT NULL,
         last_name TEXT NOT NULL,
+        email TEXT,
         documentType TEXT,
         document INTEGER,
         roleID TEXT NOT NULL,

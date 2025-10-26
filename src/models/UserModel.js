@@ -22,11 +22,11 @@ class UserModel {
     }
 
     async create(data) {
-        const { userID, name, roleID, last_name, phone } = data
+        const { userID, name, roleID, last_name, email, phone } = data
         try {
             await tursoApp.execute({
-                sql: "INSERT INTO users (userID, name, last_name, roleID, specialtyID, phone, status) values (?, ?, ?, ?, ?, ?, ?)",
-                args: [userID, name, last_name, roleID ?? '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, 'INACTIVE']
+                sql: "INSERT INTO users (userID, name, last_name, email, roleID, specialtyID, phone, status) values (?, ?, ?, ?, ?, ?, ?)",
+                args: [userID, name, last_name, email, roleID ?? '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, 'INACTIVE']
             })
 
             return { code: 200, message: 'User created successfully.' }
