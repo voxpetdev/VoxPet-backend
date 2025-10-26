@@ -9,7 +9,7 @@ import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
 
-class App {
+export class App {
     constructor() {
         this.app = express()
         this.port = process.env.PORT || 3000
@@ -28,6 +28,17 @@ class App {
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
             allowedHeaders: ['Content-Type', 'Authorization']
         }))
+        this.app.use((req, res, next) => {
+            res.setHeader("Access-Control-Allow-Origin", "*")
+            res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, OPTIONS")
+            res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+            if (req.method === "OPTIONS") {
+                return res.sendStatus(200)
+            }
+
+            next()
+        })
     }
 
     routes() {
@@ -64,4 +75,4 @@ class App {
 }
 
 const appInstance = new App()
-export default appInstance.getServer()
+export const app = appInstance.getServer()
