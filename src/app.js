@@ -61,7 +61,7 @@ export class App {
         })
     }
 
-    listen() {
+    async listen() {
         // await InitializeDatabase()
         this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
