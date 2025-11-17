@@ -1,10 +1,13 @@
 import UserModel from "#src/models/UserModel.js"
 
 class UserController {
-    cache = new Map()
-    async getAll(req, res) {
+    constructor() {
+        this.cache = new Map()
+    }
+
+    getAll = async (req, res) => {
         if (this.cache.has('users')) {
-            return res.status(200).json({data: this.cache.get('users')})
+            return res.status(200).send({code: 200, data: this.cache.get('users')})
         }
         const data = await UserModel.getAll()
         this.cache.set('users', data.data)
