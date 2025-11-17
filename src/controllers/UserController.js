@@ -1,8 +1,15 @@
 import UserModel from "#src/models/UserModel.js"
 
 class UserController {
+    cache = new Map()
     async getAll(req, res) {
+        if (this.cache.has('users')) {
+            return res.status(200).json({data: this.cache.get('users')})
+        }
         const data = await UserModel.getAll()
+        this.cache.set('users', data.data)
+
+        setTimeout(() => this.cache.delete('users'), 60 * 1000)
         res.status(data.code).send(data)
     }
 
