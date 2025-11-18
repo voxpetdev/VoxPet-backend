@@ -46,7 +46,7 @@ class UserModel {
 
             if (error) throw error
 
-            this.create({userID: authUser.user.id, name, last_name, phone})
+            this.create({userID: authUser.user.id, name, last_name, email, phone})
 
             return { code: 200, message: "User created successfully" }
         } catch (error) {
