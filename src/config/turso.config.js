@@ -46,14 +46,14 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specie(
-        specieID TEXT PRIMARY KEY,
+        specieID INTEGER PRIMARY KEY AUTOINCREMENT,
         type TEXT NOT NULL
       )
     `)
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS breed(
-        breedID TEXT PRIMARY KEY,
+        breedID INTEGER PRIMARY KEY AUTOINCREMENT,
         specieID TEXT NOT NULL,
         name TEXT NOT NULL,
         FOREIGN KEY (specieID) REFERENCES specie(specieID)
@@ -62,7 +62,7 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS pet(
-        petID TEXT PRIMARY KEY,
+        petID INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         last_name TEXT,
         weight INTEGER NOT NULL,
@@ -76,7 +76,7 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS appointments(
-        appointmentID TEXT PRIMARY KEY,
+        appointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
         petID TEXT NOT NULL,
         userID TEXT NOT NULL,
@@ -90,7 +90,7 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS medical_history(
-        medical_historyID TEXT PRIMARY KEY,
+        medical_historyID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
         record_number TEXT NOT NULL,
         reason TEXT,
@@ -103,7 +103,7 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS treatments(
-        treatmentID TEXT PRIMARY KEY,
+        treatmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         medical_historyID TEXT NOT NULL,
         treatment_name TEXT NOT NULL,
         description TEXT,
