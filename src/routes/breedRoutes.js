@@ -1,18 +1,13 @@
-import { tursoApp } from "#src/config/turso.config.js"
+import { Router } from "express"
+import BreedController from "#src/controllers/breedController.js"
 
-class BreedModel {
-    async getAll() {
-        try {
-            const res = await tursoApp.execute(`
-        SELECT * FROM breed
-            `)
-            return { code: 200, data: res.rows }
-        } catch (error) {
-            console.error(error)
-            return { code: 500, message: "Error getting the specie." }
-        }
-    }
-    
-}
 
-export default new BreedModel()
+const router = Router()
+
+router.get('/',  BreedController.getAll)
+router.get('/:id', BreedController.getById)
+router.post('/', BreedController.create)
+router.put('/:id', BreedController.update)
+router.put('/disable/:id', BreedController.disable)
+
+export default router
