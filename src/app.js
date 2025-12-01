@@ -3,8 +3,8 @@ import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
 import SpecieRoutes from '#src/routes/specieRoutes.js'
 import breedRoutes from '#src/routes/breedRoutes.js'
+import petRoutes from '#src/routes/petsRoutes.js'
 import { InitializeDatabase, down } from '#src/config/turso.config.js'
-
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -51,6 +51,7 @@ export class App {
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
         this.app.use(`${this.apiRoute}/species`, SpecieRoutes)
         this.app.use(`${this.apiRoute}/breeds`, breedRoutes)
+        this.app.use(`${this.apiRoute}/pets`, petRoutes)
     }
 
     errorHandler() {
@@ -61,8 +62,8 @@ export class App {
     }
 
     async listen() {
-        //await InitializeDatabase()
-
+        //await InitializeDatabase();
+        //await down();
         this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
             console.log(`📊 Health check: http://localhost:${this.port}/health`)
