@@ -9,7 +9,7 @@ export const tursoApp = createClient(tursoConfig)
 
 export async function InitializeDatabase() {
   try {
-    await tursoApp.batch([
+ await tursoApp.batch([
       "CREATE TABLE IF NOT EXISTS roles(roleID TEXT PRIMARY KEY, name TEXT NOT NULL)",
       "INSERT INTO roles values ('b50b032e-58e8-4899-a2ec-004ac2ca50e1', 'SuperAdmin')",
       "INSERT INTO roles values ('bf2b5102-3e41-43ee-8455-69fa0d2c638a', 'Administrador de clínica')",
@@ -44,7 +44,7 @@ export async function InitializeDatabase() {
       )
     `)
 
-    await tursoApp.execute(`
+  await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specie(
         specieID INTEGER PRIMARY KEY AUTOINCREMENT,
         type TEXT NOT NULL
@@ -54,7 +54,7 @@ export async function InitializeDatabase() {
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS breed(
         breedID INTEGER PRIMARY KEY AUTOINCREMENT,
-        specieID TEXT NOT NULL,
+        specieID  NOT NULL,
         name TEXT NOT NULL,
         FOREIGN KEY (specieID) REFERENCES specie(specieID)
       )
@@ -138,4 +138,7 @@ export async function down() {
   } catch (error) {
     console.error(error)
   }
+
+  
 }
+
