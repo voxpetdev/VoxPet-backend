@@ -9,7 +9,7 @@ export const tursoApp = createClient(tursoConfig)
 
 export async function InitializeDatabase() {
   try {
- await tursoApp.batch([
+    await tursoApp.batch([
       "CREATE TABLE IF NOT EXISTS roles(roleID TEXT PRIMARY KEY, name TEXT NOT NULL)",
       "INSERT INTO roles values ('b50b032e-58e8-4899-a2ec-004ac2ca50e1', 'SuperAdmin')",
       "INSERT INTO roles values ('bf2b5102-3e41-43ee-8455-69fa0d2c638a', 'Administrador de clínica')",
@@ -17,10 +17,9 @@ export async function InitializeDatabase() {
       "INSERT INTO roles VALUES ('2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', 'Usuario')",
     ])
 
-
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specialties(
-        specialtyID TEXT PRIMARY KEY,
+        specialtyID INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL
       )
     `)
@@ -48,7 +47,9 @@ export async function InitializeDatabase() {
   await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specie(
         specieID INTEGER PRIMARY KEY AUTOINCREMENT,
-        type TEXT NOT NULL
+        type TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -57,6 +58,8 @@ export async function InitializeDatabase() {
         breedID INTEGER PRIMARY KEY AUTOINCREMENT,
         specieID  NOT NULL,
         name TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (specieID) REFERENCES specie(specieID)
       )
     `)
@@ -71,19 +74,34 @@ export async function InitializeDatabase() {
         breedID INTEGER NOT NULL,
         genre TEXT NOT NULL,
         color TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (breedID) REFERENCES breed(breedID)
       )
     `)
 
     await tursoApp.execute(`
+      CREATE TABLE IF NOT EXISTS users_pets(
+      users_petsID INTEGER PRIMARY KEY AUTOINCREMENT,
+      userID INTEGER NOT NULL,
+      petID INTEGER NOT NULL,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (userID) REFERENCES users(userID),
+      FOREIGN KEY (petID) REFERENCES pet(petID)
+      )`)
+
+    await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS appointments(
         appointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
-        petID TEXT INTEGER NULL,
-        userID TEXT INTEGER NULL,
+        petID INTEGER NULL,
+        userID INTEGER NULL,
         consultation TEXT,
         place TEXT,
         observations TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (userID) REFERENCES users(userID),
         FOREIGN KEY (petID) REFERENCES pet(petID)
       )
@@ -98,6 +116,8 @@ export async function InitializeDatabase() {
         description TEXT,
         petID INTEGER NOT NULL,
         observations TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (petID) REFERENCES pet(petID)
       )
     `)
@@ -113,6 +133,8 @@ export async function InitializeDatabase() {
         dosage TEXT,
         frequency TEXT,
         observations TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (medical_historyID) REFERENCES medical_history(medical_historyID)
       )
     `)
@@ -125,21 +147,21 @@ export async function InitializeDatabase() {
 export async function down() {
   try {
     await tursoApp.batch([
-      "DROP TABLE IF EXISTS users",
-      "DROP TABLE IF EXISTS specialties",
-      "DROP TABLE IF EXISTS roles",
       "DROP TABLE IF EXISTS treatments",
       "DROP TABLE IF EXISTS medical_history",
       "DROP TABLE IF EXISTS appointments",
+      "DROP TABLE IF EXISTS users_pets",
       "DROP TABLE IF EXISTS pet",
+      "DROP TABLE IF EXISTS breed",
       "DROP TABLE IF EXISTS specie",
-      "DROP TABLE IF EXISTS breed"
-    ])
-    console.log("Tablas eliminadas")
+      "DROP TABLE IF EXISTS users",
+      "DROP TABLE IF EXISTS specialties",
+      "DROP TABLE IF EXISTS roles"
+    ]);
+    console.log("Tablas eliminadas");
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
-
   
 }
 
