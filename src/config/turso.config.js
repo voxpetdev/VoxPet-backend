@@ -17,6 +17,7 @@ export async function InitializeDatabase() {
       "INSERT INTO roles VALUES ('2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', 'Usuario')",
     ])
 
+
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specialties(
         specialtyID TEXT PRIMARY KEY,
@@ -67,7 +68,7 @@ export async function InitializeDatabase() {
         last_name TEXT,
         weight INTEGER NOT NULL,
         birthday DATE NOT NULL,
-        breedID TEXT NOT NULL,
+        breedID INTEGER NOT NULL,
         genre TEXT NOT NULL,
         color TEXT,
         FOREIGN KEY (breedID) REFERENCES breed(breedID)
@@ -78,8 +79,8 @@ export async function InitializeDatabase() {
       CREATE TABLE IF NOT EXISTS appointments(
         appointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
-        petID TEXT NOT NULL,
-        userID TEXT NOT NULL,
+        petID TEXT INTEGER NULL,
+        userID TEXT INTEGER NULL,
         consultation TEXT,
         place TEXT,
         observations TEXT,
@@ -95,7 +96,7 @@ export async function InitializeDatabase() {
         record_number TEXT NOT NULL,
         reason TEXT,
         description TEXT,
-        petID TEXT,
+        petID INTEGER NOT NULL,
         observations TEXT,
         FOREIGN KEY (petID) REFERENCES pet(petID)
       )
@@ -104,7 +105,7 @@ export async function InitializeDatabase() {
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS treatments(
         treatmentID INTEGER PRIMARY KEY AUTOINCREMENT,
-        medical_historyID TEXT NOT NULL,
+        medical_historyID INTEGER NOT NULL,
         treatment_name TEXT NOT NULL,
         description TEXT,
         start_date DATE NOT NULL,
