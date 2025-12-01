@@ -11,6 +11,11 @@ class AuthController {
         const data = await AuthModel.register(req.body)
         res.status(data.code).send(data)
     }
+
+    async resetRequest(res, req) {
+        const data = await AuthModel.resetRequest(req.body)
+        res.status(data.code).send(data)
+    }
 }
 
 export default new AuthController()
