@@ -78,6 +78,19 @@ class AuthModel {
             access_token: this.generateToken(user)
         }
     }
+
+    async resetRequest(email) {
+        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+            redirectTo: 'https://vox-pet-web.vercel.app/update-password'
+        })
+
+        if (error) {
+            console.error(error)
+            return { code: 401, message: error.message }
+        }
+
+        return { code: 200, message: "Codigo enviado correctamente." }
+    }
 }
 
 export default new AuthModel()

@@ -41,7 +41,7 @@ class UserModel {
             const { data: authUser, error } = await supabaseAdmin.auth.admin.createUser({
                 email,
                 password,
-                email_confirm: false
+                email_confirm: true
             })
 
             if (error) throw error
