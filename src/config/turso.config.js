@@ -21,7 +21,8 @@ export async function InitializeDatabase() {
       CREATE TABLE IF NOT EXISTS specialties(
         specialtyID INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
-        status TEXT
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -34,7 +35,7 @@ export async function InitializeDatabase() {
         documentType TEXT,
         document INTEGER,
         roleID TEXT NOT NULL,
-        specialtyID TEXT,
+        specialtyID INTEGER,
         phone TEXT NOT NULL,
         address TEXT,
         status TEXT,
