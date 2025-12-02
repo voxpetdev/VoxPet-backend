@@ -19,8 +19,10 @@ export async function InitializeDatabase() {
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specialties(
-        specialtyID TEXT PRIMARY KEY,
-        name TEXT NOT NULL
+        specialtyID INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -33,7 +35,7 @@ export async function InitializeDatabase() {
         documentType TEXT,
         document INTEGER,
         roleID TEXT NOT NULL,
-        specialtyID TEXT,
+        specialtyID INTEGER,
         phone TEXT NOT NULL,
         address TEXT,
         status TEXT,
@@ -44,67 +46,96 @@ export async function InitializeDatabase() {
       )
     `)
 
-    await tursoApp.execute(`
+  await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specie(
-        specieID TEXT PRIMARY KEY,
-        type TEXT NOT NULL
+        specieID INTEGER PRIMARY KEY AUTOINCREMENT,
+        type TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS breed(
-        breedID TEXT PRIMARY KEY,
-        specieID TEXT NOT NULL,
+        breedID INTEGER PRIMARY KEY AUTOINCREMENT,
+        specieID  NOT NULL,
         name TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (specieID) REFERENCES specie(specieID)
       )
     `)
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS pet(
-        petID TEXT PRIMARY KEY,
+        petID INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         last_name TEXT,
-        weight INTEGER NOT NULL,
+        weight REAL NOT NULL,
         birthday DATE NOT NULL,
-        breedID TEXT NOT NULL,
+        breedID INTEGER NOT NULL,
         genre TEXT NOT NULL,
         color TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (breedID) REFERENCES breed(breedID)
       )
     `)
 
     await tursoApp.execute(`
+      CREATE TABLE IF NOT EXISTS users_pets(
+      users_petsID INTEGER PRIMARY KEY AUTOINCREMENT,
+      userID INTEGER NOT NULL,
+      petID INTEGER NOT NULL,
+      createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+      FOREIGN KEY (userID) REFERENCES users(userID),
+      FOREIGN KEY (petID) REFERENCES pet(petID)
+      )`)
+    
+    await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS appointments(
-        appointmentID TEXT PRIMARY KEY,
+        appointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
-        petID TEXT NOT NULL,
-        userID TEXT NOT NULL,
         consultation TEXT,
         place TEXT,
         observations TEXT,
-        FOREIGN KEY (userID) REFERENCES users(userID),
-        FOREIGN KEY (petID) REFERENCES pet(petID)
+        specialistID INTEGER NOT NULL,
+        status TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (specialistID) REFERENCES specialties(specialtyID)
       )
     `)
 
     await tursoApp.execute(`
+      CREATE TABLE IF NOT EXISTS appointments_pets(
+      appointments_petsID INTEGER PRIMARY KEY AUTOINCREMENT,
+      appointmentID INTEGER NOT NULL,
+      petID INTEGER NOT NULL,
+      FOREIGN KEY (appointmentID) REFERENCES appointments(appointmentID),
+      FOREIGN KEY (petID) REFERENCES pet(petID)
+    )`)
+
+    await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS medical_history(
-        medical_historyID TEXT PRIMARY KEY,
+        medical_historyID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
         record_number TEXT NOT NULL,
         reason TEXT,
         description TEXT,
-        petID TEXT,
+        petID INTEGER NOT NULL,
         observations TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (petID) REFERENCES pet(petID)
       )
     `)
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS treatments(
-        treatmentID TEXT PRIMARY KEY,
-        medical_historyID TEXT NOT NULL,
+        treatmentID INTEGER PRIMARY KEY AUTOINCREMENT,
+        medical_historyID INTEGER NOT NULL,
         treatment_name TEXT NOT NULL,
         description TEXT,
         start_date DATE NOT NULL,
@@ -112,6 +143,8 @@ export async function InitializeDatabase() {
         dosage TEXT,
         frequency TEXT,
         observations TEXT,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (medical_historyID) REFERENCES medical_history(medical_historyID)
       )
     `)
@@ -124,18 +157,22 @@ export async function InitializeDatabase() {
 export async function down() {
   try {
     await tursoApp.batch([
-      "DROP TABLE IF EXISTS users",
-      "DROP TABLE IF EXISTS specialties",
-      "DROP TABLE IF EXISTS roles",
       "DROP TABLE IF EXISTS treatments",
       "DROP TABLE IF EXISTS medical_history",
       "DROP TABLE IF EXISTS appointments",
+      "DROP TABLE IF EXISTS users_pets",
       "DROP TABLE IF EXISTS pet",
+      "DROP TABLE IF EXISTS breed",
       "DROP TABLE IF EXISTS specie",
-      "DROP TABLE IF EXISTS breed"
-    ])
-    console.log("Tablas eliminadas")
+      "DROP TABLE IF EXISTS users",
+      "DROP TABLE IF EXISTS specialties",
+      "DROP TABLE IF EXISTS roles"
+    ]);
+    console.log("Tablas eliminadas");
   } catch (error) {
-    console.error(error)
+    console.error(error);
   }
+  
 }
+
+

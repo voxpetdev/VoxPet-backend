@@ -1,12 +1,14 @@
 import userRoutes from '#src/routes/userRoutes.js'
-// import roleRoutes from '#src/routes/roleRoutes.js'
-// import authRoutes from '#src/routes/authRoutes.js'
-// import DatesRoutes from '#src/routes/DatesRoutes.js'
-// import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
-// import treatmentRoutes from '#src/routes/treatmentRoutes.js'
+import roleRoutes from '#src/routes/roleRoutes.js'
+import authRoutes from '#src/routes/authRoutes.js'
+import DatesRoutes from '#src/routes/DatesRoutes.js'
+import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
+import treatmentRoutes from '#src/routes/treatmentRoutes.js'
+import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import { de } from 'zod/locales'
 
 export class App {
     constructor() {
@@ -46,11 +48,10 @@ export class App {
         })
         this.app.get('/health', (req, res) => { res.status(200).send({ success:true, message: 'Servidor funcionando correctamente', timestamp: new Date().toISOString() }) })
         this.app.use(`${this.apiRoute}/users`, userRoutes)
-        // this.app.use(`${this.apiRoute}/dates`, DatesRoutes)
-        // this.app.use(`${this.apiRoute}/roles`, roleRoutes)
-        // this.app.use(`${this.apiRoute}/auth`, authRoutes)
-        // this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
-        // this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
+        this.app.use(`${this.apiRoute}/roles`, roleRoutes)
+        this.app.use(`${this.apiRoute}/auth`, authRoutes)
+        this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
+        this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
     }
 
     errorHandler() {
@@ -61,6 +62,7 @@ export class App {
     }
 
     async listen() {
+        // await InitializeDatabase()
         this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
             console.log(`📊 Health check: http://localhost:${this.port}/health`)
