@@ -5,10 +5,12 @@ import SpecieRoutes from '#src/routes/specieRoutes.js'
 import breedRoutes from '#src/routes/breedRoutes.js'
 import petRoutes from '#src/routes/petsRoutes.js'
 import SpecialtiesRoutes from '#src/routes/specialtiesRoutes.js'
+import AppointmentsRoutes from '#src/routes/appointmentsRoutes.js'
 import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
+import { de } from 'zod/locales'
 
 export class App {
     constructor() {
@@ -54,6 +56,7 @@ export class App {
         this.app.use(`${this.apiRoute}/breeds`, breedRoutes)
         this.app.use(`${this.apiRoute}/pets`, petRoutes)
         this.app.use(`${this.apiRoute}/specialty`,SpecialtiesRoutes)
+        this.app.use(`${this.apiRoute}/appointment`,AppointmentsRoutes)
     }
 
     errorHandler() {
