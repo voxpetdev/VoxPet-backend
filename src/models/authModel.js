@@ -35,7 +35,7 @@ class AuthModel {
             const userCreated = await UserModel.create({ userID: data.user.id, ...userData })
             return {
                 code: userCreated.code,
-                message: userCreated.message
+                data: userCreated
             }
         }
 
