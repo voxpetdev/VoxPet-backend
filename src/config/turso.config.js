@@ -20,7 +20,9 @@ export async function InitializeDatabase() {
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specialties(
         specialtyID INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
+        name TEXT NOT NULL,
+        createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
       )
     `)
 
@@ -33,7 +35,7 @@ export async function InitializeDatabase() {
         documentType TEXT,
         document INTEGER,
         roleID TEXT NOT NULL,
-        specialtyID TEXT,
+        specialtyID INTEGER,
         phone TEXT NOT NULL,
         address TEXT,
         status TEXT,
@@ -69,7 +71,7 @@ export async function InitializeDatabase() {
         petID INTEGER PRIMARY KEY AUTOINCREMENT,
         name TEXT NOT NULL,
         last_name TEXT,
-        weight INTEGER NOT NULL,
+        weight REAL NOT NULL,
         birthday DATE NOT NULL,
         breedID INTEGER NOT NULL,
         genre TEXT NOT NULL,
@@ -90,22 +92,30 @@ export async function InitializeDatabase() {
       FOREIGN KEY (userID) REFERENCES users(userID),
       FOREIGN KEY (petID) REFERENCES pet(petID)
       )`)
-
+    
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS appointments(
         appointmentID INTEGER PRIMARY KEY AUTOINCREMENT,
         date DATE NOT NULL,
-        petID INTEGER NULL,
-        userID INTEGER NULL,
         consultation TEXT,
         place TEXT,
         observations TEXT,
+        specialistID INTEGER NOT NULL,
+        status TEXT NOT NULL,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-        FOREIGN KEY (userID) REFERENCES users(userID),
-        FOREIGN KEY (petID) REFERENCES pet(petID)
+        FOREIGN KEY (specialistID) REFERENCES specialties(specialtyID)
       )
     `)
+
+    await tursoApp.execute(`
+      CREATE TABLE IF NOT EXISTS appointments_pets(
+      appointments_petsID INTEGER PRIMARY KEY AUTOINCREMENT,
+      appointmentID INTEGER NOT NULL,
+      petID INTEGER NOT NULL,
+      FOREIGN KEY (appointmentID) REFERENCES appointments(appointmentID),
+      FOREIGN KEY (petID) REFERENCES pet(petID)
+    )`)
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS medical_history(
