@@ -6,23 +6,23 @@ class PetsController {
     }
 
     getAll = async (req, res) => {
-        if (this.cache.has('specie')) {
-            return res.status(200).send({code: 200, data: this.cache.get('specie')})
+        if (this.cache.has('pet')) {
+            return res.status(200).send({code: 200, data: this.cache.get('pet')})
         }
         const data = await PetsModel.getAll()
-        this.cache.set('specie', data.data)
+        this.cache.set('pet', data.data)
 
-        setTimeout(() => this.cache.delete('specie'), 60 * 1000)
+        setTimeout(() => this.cache.delete('pet'), 60 * 1000)
         res.status(data.code).send(data)
     }
 
     getById = async (req, res) => {
         const { id } = req.params
 
-        if (this.cache.has(`specie_${id}`)) {
+        if (this.cache.has(`pet_${id}`)) {
             return res.status(200).send({
                 code: 200,
-                data: this.cache.get(`specie_${id}`)
+                data: this.cache.get(`pet_${id}`)
             })
         }
 
@@ -31,8 +31,8 @@ class PetsController {
             return res.status(404).send(data)
         }
         if (data.code === 200) {
-            this.cache.set(`specie_${id}`, data.data)
-            setTimeout(() => this.cache.delete(`specie_${id}`), 60 * 1000)
+            this.cache.set(`pet_${id}`, data.data)
+            setTimeout(() => this.cache.delete(`pet_${id}`), 60 * 1000)
         }
 
         return res.status(data.code).send(data)

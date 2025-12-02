@@ -4,6 +4,7 @@ import authRoutes from '#src/routes/authRoutes.js'
 import SpecieRoutes from '#src/routes/specieRoutes.js'
 import breedRoutes from '#src/routes/breedRoutes.js'
 import petRoutes from '#src/routes/petsRoutes.js'
+import SpecialtiesRoutes from '#src/routes/specialtiesRoutes.js'
 import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
@@ -52,6 +53,7 @@ export class App {
         this.app.use(`${this.apiRoute}/species`, SpecieRoutes)
         this.app.use(`${this.apiRoute}/breeds`, breedRoutes)
         this.app.use(`${this.apiRoute}/pets`, petRoutes)
+        this.app.use(`${this.apiRoute}/specialty`,SpecialtiesRoutes)
     }
 
     errorHandler() {

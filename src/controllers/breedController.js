@@ -6,23 +6,23 @@ class BreedController {
     }
 
     getAll = async (req, res) => {
-        if (this.cache.has('specie')) {
-            return res.status(200).send({code: 200, data: this.cache.get('specie')})
+        if (this.cache.has('breed')) {
+            return res.status(200).send({code: 200, data: this.cache.get('breed')})
         }
         const data = await BreedModel.getAll()
-        this.cache.set('specie', data.data)
+        this.cache.set('breed', data.data)
 
-        setTimeout(() => this.cache.delete('specie'), 60 * 1000)
+        setTimeout(() => this.cache.delete('breed'), 60 * 1000)
         res.status(data.code).send(data)
     }
 
     getById = async (req, res) => {
         const { id } = req.params
 
-        if (this.cache.has(`specie_${id}`)) {
+        if (this.cache.has(`breed_${id}`)) {
             return res.status(200).send({
                 code: 200,
-                data: this.cache.get(`specie_${id}`)
+                data: this.cache.get(`breed_${id}`)
             })
         }
 
@@ -31,8 +31,8 @@ class BreedController {
             return res.status(404).send(data)
         }
         if (data.code === 200) {
-            this.cache.set(`specie_${id}`, data.data)
-            setTimeout(() => this.cache.delete(`specie_${id}`), 60 * 1000)
+            this.cache.set(`breed_${id}`, data.data)
+            setTimeout(() => this.cache.delete(`breed_${id}`), 60 * 1000)
         }
 
         return res.status(data.code).send(data)

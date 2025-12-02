@@ -20,7 +20,8 @@ export async function InitializeDatabase() {
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS specialties(
         specialtyID INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL
+        name TEXT NOT NULL,
+        status TEXT
       )
     `)
 
@@ -99,6 +100,7 @@ export async function InitializeDatabase() {
         place TEXT,
         observations TEXT,
         specialistID INTEGER NOT NULL,
+        status TEXT NOT NULL,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         updatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (specialistID) REFERENCES specialties(specialtyID)
