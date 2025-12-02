@@ -21,10 +21,15 @@
     "bcrypt": "6.0.0",
     "cors": "2.8.5",
     "dayjs": "^1.11.18",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.44.7",
     "express": "5.1.0",
     "jsonwebtoken": "9.0.2",
     "morgan": "1.10.1",
     "uuid": "11.1.0",
     "zod": "4.0.17"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.7"
   }
 }

@@ -1,14 +1,9 @@
 import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
-import DatesRoutes from '#src/routes/DatesRoutes.js'
-import clinicalHistoryRoutes from '#src/routes/clinicalHistoryRoutes.js'
-import treatmentRoutes from '#src/routes/treatmentRoutes.js'
-import { InitializeDatabase, down } from '#src/config/turso.config.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
-import { de } from 'zod/locales'
 
 export class App {
     constructor() {
@@ -50,8 +45,6 @@ export class App {
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
-        this.app.use(`${this.apiRoute}/clinical`, clinicalHistoryRoutes)
-        this.app.use(`${this.apiRoute}/treatment`, treatmentRoutes)
     }
 
     errorHandler() {

@@ -1,6 +1,7 @@
-import { tursoApp } from "#src/config/turso.config.js"
+import { db } from '../db/index.js'
+import { users } from "../db/Schemas/usersSchema.js"
+import { eq } from 'drizzle-orm'
 import { supabaseAdmin } from '#src/config/supabase.config.js'
-import dayjs from 'dayjs'
 
 class UserModel {
     constructor() {
@@ -9,12 +10,8 @@ class UserModel {
 
     async getAll() {
         try {
-            const res = await tursoApp.execute(`
-                SELECT u.name, u.last_name, u.documentType, u.document, r.name role, s.name specialty, u.phone, u.address, u.status, u.createdAt, u.updatedAt
-                from users u
-                LEFT JOIN roles r ON u.roleID = r.roleID LEFT JOIN specialties s ON u.specialtyID = s.specialtyID
-            `)
-            return { code: 200, data: res.rows }
+            const res = await db.select().from(users)
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the users." }
@@ -22,14 +19,10 @@ class UserModel {
     }
 
     async create(data) {
-        const { userID, name, roleID, last_name, email, phone } = data
         try {
-            await tursoApp.execute({
-                sql: "INSERT INTO users (userID, name, last_name, email, roleID, specialtyID, phone, status) values (?, ?, ?, ?, ?, ?, ?, ?)",
-                args: [userID, name, last_name, email, roleID ?? '2f0a87cb-83e0-4838-bf2d-3a93d992dbfb', null, phone, 'INACTIVE']
-            })
-
-            return { code: 200, message: 'User created successfully.' }
+            await db.insert(users).values({...data, roleID: "b50b032e-58e8-4899-a2ec-004ac2ca50e1" })
+            const user = await db.select().from(users).where(eq(users.email, data.email))
+            return { code: 200, data: user }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating the user.' }
@@ -46,9 +39,9 @@ class UserModel {
 
             if (error) throw error
 
-            this.create({userID: authUser.user.id, name, last_name, email, phone})
+            const user = await this.create({userID: authUser.user.id, name, last_name, roleID: "2f0a87cb-83e0-4838-bf2d-3a93d992dbfb" , email, phone})
 
-            return { code: 200, message: "User created successfully" }
+            return { code: 200, data: user.data }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating the user.' }
@@ -56,18 +49,12 @@ class UserModel {
     }
 
     async update(userID, data) {
-        const now = dayjs().format('YYYY-MM-DD HH:mm:ss')
         try {
-            const user = await tursoApp.execute({ sql: "SELECT name, last_name, documentType, document, roleID, specialtyID, phone, address, status, updatedAt FROM users WHERE userID = ?", args: [userID] })
-            if (user.rows < 1) return { code: 500, message: "No se encontró el usuario" }
-            const updatedUser = { ...user.rows[0], ...data, updatedAt: now}
+            const user = await db.select().from(users).where(eq(users.userID, userID))
+            if (!user) return { code: 500, message: "No se encontró el usuario" }
+            const updatedUser = { ...user, ...data, updatedAt: Date.now()}
 
-            const { name, last_name, documentType, document, roleID, specialtyID, phone, address, status } = updatedUser
-
-            await tursoApp.execute({
-                sql: "UPDATE users SET name = ?, last_name = ?, documentType = ?, document = ?, roleID = ?, specialtyID = ?, phone = ?, address = ?, status = ?, updatedAt = ? WHERE userID = ?",
-                args: [name, last_name, documentType, document, roleID, specialtyID, phone, address, status, now, userID]
-            })
+            await db.update(users).set(updatedUser).where(eq(users.userID, userID))
             
             return { code: 200, data: updatedUser }
         } catch (error) {
