@@ -97,7 +97,9 @@ export async function InitializeDatabase() {
         date DATE NOT NULL,
         consultation TEXT,
         place TEXT,
-        observations TEXT,
+        observations TEXT
+        petID INTEGER NOT NULL, //la mascota 
+        userID INTEGER NOT NULL, //v
         specialistID INTEGER NOT NULL,
         status TEXT NOT NULL,
         createdAt DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -106,14 +108,7 @@ export async function InitializeDatabase() {
       )
     `)
 
-    await tursoApp.execute(`
-      CREATE TABLE IF NOT EXISTS appointments_pets(
-      appointments_petsID INTEGER PRIMARY KEY AUTOINCREMENT,
-      appointmentID INTEGER NOT NULL,
-      petID INTEGER NOT NULL,
-      FOREIGN KEY (appointmentID) REFERENCES appointments(appointmentID),
-      FOREIGN KEY (petID) REFERENCES pet(petID)
-    )`)
+    
 
     await tursoApp.execute(`
       CREATE TABLE IF NOT EXISTS medical_history(
