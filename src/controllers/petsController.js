@@ -48,6 +48,11 @@ class PetsController {
         res.status(data.code).send(data)
     }
 
+    async disable(req, res) {
+        const data = await PetsModel.disable(req.params.id)
+        res.status(data.code).send(data)
+    }
+
 }
 
 export default new PetsController()
