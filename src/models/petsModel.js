@@ -1,4 +1,3 @@
-import { tursoApp } from "#src/config/turso.config.js"
 import { pet } from "#src/db/Schemas/petSchema.js"
 import { db } from "../db/index.js"
 import { eq } from "drizzle-orm"
@@ -6,10 +5,9 @@ import { eq } from "drizzle-orm"
 class PetModel {
     async getAll() {
         try {
-            const res = await tursoApp.execute(`
-        SELECT * FROM pet
-            `)
-            return { code: 200, data: res.rows }
+            const res = await db.select().from(pet)
+            console.log(res)
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the pet." }
@@ -18,11 +16,8 @@ class PetModel {
     
     async getById(petID) {
         try {
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM pet WHERE petID= ?",
-                args: [petID]
-            })
-            return { code: 200, data: res.rows[0] }
+            const res = await db.select().from(pet).where(eq(pet.petID, petID))
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the petID." }
@@ -30,15 +25,9 @@ class PetModel {
     }
 
     async create(data) {
-        const { name, last_name, weight, birthday, breedID, genre, color } = data
         try {
-            await tursoApp.execute({
-                sql: "INSERT INTO pet ( name, last_name, weight, birthday, breedID, genre, color) values (?, ?, ?, ?, ?, ?, ?)",
-                args: [ name, last_name, weight, birthday, breedID, genre, color]
-            })
-
-            return { code: 200, message: 'pet created successfully.'
-            }
+            await db.insert(pet).values(data)
+            return { code: 200, data }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating  pet.' }
@@ -47,21 +36,7 @@ class PetModel {
 
     async update(petID, data) {
         try {
-            const { name, last_name, weight, birthday, breedID, genre, color } = data
-
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM pet WHERE petID = ?",
-                args: [petID]
-            })
-
-            if (res.rows.length < 1) {
-                return { code: 404, message: "pet not found." }
-            }
-
-            await tursoApp.execute({
-                sql: "UPDATE pet SET name = ?, last_name= ?, weight = ?, birthday = ?, breedID = ?, genre = ?, color = ? WHERE petID = ?",
-                args: [name, last_name, weight, birthday, breedID, genre, color, petID]
-            })
+            await db.update(pet).set(data).where(eq(pet.petID, petID))
 
             return { code: 200, message: "pet updated successfully." }
 
