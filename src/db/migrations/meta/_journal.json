@@ -1,0 +1,27 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1764646078042,
+      "tag": "0000_mean_roulette",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1764723445214,
+      "tag": "0001_robust_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1764729349383,
+      "tag": "0002_nosy_scourge",
+      "breakpoints": true
+    }
+  ]
+}

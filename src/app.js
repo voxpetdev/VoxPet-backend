@@ -1,11 +1,7 @@
 import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
-import SpecieRoutes from '#src/routes/specieRoutes.js'
-import breedRoutes from '#src/routes/breedRoutes.js'
-import petRoutes from '#src/routes/petsRoutes.js'
-import SpecialtiesRoutes from '#src/routes/specialtiesRoutes.js'
-import { InitializeDatabase, down } from '#src/config/turso.config.js'
+import petsRoutes from '#src/routes/petsRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -49,11 +45,8 @@ export class App {
         this.app.get('/health', (req, res) => { res.status(200).send({ success:true, message: 'Servidor funcionando correctamente', timestamp: new Date().toISOString() }) })
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
+        this.app.use(`${this.apiRoute}/pets`, petsRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
-        this.app.use(`${this.apiRoute}/species`, SpecieRoutes)
-        this.app.use(`${this.apiRoute}/breeds`, breedRoutes)
-        this.app.use(`${this.apiRoute}/pets`, petRoutes)
-        this.app.use(`${this.apiRoute}/specialty`,SpecialtiesRoutes)
     }
 
     errorHandler() {
@@ -64,8 +57,7 @@ export class App {
     }
 
     async listen() {
-        //await InitializeDatabase();
-        //await down();
+        // await InitializeDatabase()
         this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`🚀 Servidor corriendo en http://localhost:${this.port}`)
             console.log(`📊 Health check: http://localhost:${this.port}/health`)
