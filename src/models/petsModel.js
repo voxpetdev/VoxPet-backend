@@ -1,4 +1,7 @@
 import { tursoApp } from "#src/config/turso.config.js"
+import { pet } from "#src/db/Schemas/petSchema.js"
+import { db } from "../db/index.js"
+import { eq } from "drizzle-orm"
 
 class PetModel {
     async getAll() {
@@ -43,30 +46,45 @@ class PetModel {
     }
 
     async update(petID, data) {
-    try {
-        const { name, last_name, weight, birthday, breedID, genre, color } = data
+        try {
+            const { name, last_name, weight, birthday, breedID, genre, color } = data
 
-        const res = await tursoApp.execute({
-            sql: "SELECT * FROM pet WHERE petID = ?",
-            args: [petID]
-        })
+            const res = await tursoApp.execute({
+                sql: "SELECT * FROM pet WHERE petID = ?",
+                args: [petID]
+            })
 
-        if (res.rows.length < 1) {
-            return { code: 404, message: "pet not found." }
+            if (res.rows.length < 1) {
+                return { code: 404, message: "pet not found." }
+            }
+
+            await tursoApp.execute({
+                sql: "UPDATE pet SET name = ?, last_name= ?, weight = ?, birthday = ?, breedID = ?, genre = ?, color = ? WHERE petID = ?",
+                args: [name, last_name, weight, birthday, breedID, genre, color, petID]
+            })
+
+            return { code: 200, message: "pet updated successfully." }
+
+        } catch (error) {
+            console.error(error)
+            return { code: 500, message: "Error updating pet." }
         }
-
-        await tursoApp.execute({
-            sql: "UPDATE pet SET name = ?, last_name= ?, weight = ?, birthday = ?, breedID = ?, genre = ?, color = ? WHERE petID = ?",
-            args: [name, last_name, weight, birthday, breedID, genre, color, petID]
-        })
-
-        return { code: 200, message: "pet updated successfully." }
-
-    } catch (error) {
-        console.error(error)
-        return { code: 500, message: "Error updating pet." }
     }
-}
+
+    async disable(petID) {
+        try {
+            const res = await db.update(pet).set({ status: "INACTIVE" }).where(eq(pet.petID, petID))
+            if (res.rowsAffected < 1) {
+                return { code: 404, message: "La mascota no se encuentra o no existe" }
+            }
+            return { code: 200, message: "Mascota inhabilitada" }
+        } catch (error) {
+            console.error(error)
+            return {
+                code: 500, message: "Error interno del servicio"
+            }
+        }
+    }
 
 }
 
