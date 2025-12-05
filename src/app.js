@@ -1,6 +1,7 @@
 import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
+import petsRoutes from '#src/routes/petsRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -44,6 +45,7 @@ export class App {
         this.app.get('/health', (req, res) => { res.status(200).send({ success:true, message: 'Servidor funcionando correctamente', timestamp: new Date().toISOString() }) })
         this.app.use(`${this.apiRoute}/users`, userRoutes)
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
+        this.app.use(`${this.apiRoute}/pets`, petsRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
     }
 
