@@ -27,11 +27,11 @@ class SpecieModel {
     }
 
     async create(data) {
-        const { type } = data
+        const { name } = data
         try {
             await tursoApp.execute({
-                sql: "INSERT INTO specie (type) values ( ?)",
-                args: [ type]
+                sql: "INSERT INTO specie (name) values ( ?)",
+                args: [ name]
             })
 
             return { code: 200, message: 'Specie created successfully.' }
@@ -53,8 +53,8 @@ class SpecieModel {
         }
 
         await tursoApp.execute({
-            sql: "UPDATE specie SET type = ? WHERE specieID = ?",
-            args: [data.type, specieID]
+            sql: "UPDATE specie SET name = ? WHERE specieID = ?",
+            args: [data.name, specieID]
         })
 
         return { code: 200, message: "Specie updated successfully." }

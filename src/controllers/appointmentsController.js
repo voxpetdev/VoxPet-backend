@@ -6,17 +6,17 @@ class AppointmensController {
     }
 
     getAll = async (req, res) => {
-        if (this.cache.has('specialty')) {
+        if (this.cache.has('appointment')) {
             return res.status(200).send({
                 code: 200,
-                data: this.cache.get('specialty')
+                data: this.cache.get('appointment')
             })
         }
 
         const data = await AppointmentsModel.getAll()
-        this.cache.set('specialty', data.data)
+        this.cache.set('appointment', data.data)
 
-        setTimeout(() => this.cache.delete('specialty'), 60 * 1000)
+        setTimeout(() => this.cache.delete('appointment'), 60 * 1000)
 
         res.status(data.code).send(data)
     }
@@ -24,21 +24,21 @@ class AppointmensController {
     getById = async (req, res) => {
         const { id } = req.params
 
-        if (this.cache.has(`specialty_${id}`)) {
+        if (this.cache.has(`appointment_${id}`)) {
             return res.status(200).send({
                 code: 200,
-                data: this.cache.get(`specialty_${id}`)
+                data: this.cache.get(`appointment_${id}`)
             })
         }
 
         const data = await AppointmentsModel.getById(id)
 
         if (!data.data) {
-            return res.status(404).send({ code: 404, message: "Specialty not found" })
+            return res.status(404).send({ code: 404, message: "appointment not found" })
         }
 
-        this.cache.set(`specialty_${id}`, data.data)
-        setTimeout(() => this.cache.delete(`specialty_${id}`), 60 * 1000)
+        this.cache.set(`appointment_${id}`, data.data)
+        setTimeout(() => this.cache.delete(`appointment_${id}`), 60 * 1000)
 
         return res.status(data.code).send(data)
     }

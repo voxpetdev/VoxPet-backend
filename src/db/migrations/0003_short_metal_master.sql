@@ -1,1 +1,0 @@
-ALTER TABLE `pet` ADD `status` text DEFAULT 'ACTIVE';
