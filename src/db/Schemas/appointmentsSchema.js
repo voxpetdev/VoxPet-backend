@@ -9,7 +9,7 @@ export const appointments= sqliteTable("appointments", {
     place: text("place"),
     observations: text("observations"),
     petID: integer("petID").notNull().references(() => pet.petID),
-    useID: integer("userID").notNull().references(() => users.userID),
+    userID: text("userID").notNull().references(() => users.userID),
     status: text("status").notNull(),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())

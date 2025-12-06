@@ -2,6 +2,9 @@ import userRoutes from '#src/routes/userRoutes.js'
 import roleRoutes from '#src/routes/roleRoutes.js'
 import authRoutes from '#src/routes/authRoutes.js'
 import petsRoutes from '#src/routes/petsRoutes.js'
+import specieRoutes from '#src/routes/specieRoutes.js'
+import breedRouters from '#src/routes/breedRoutes.js'
+import appointmentsRoutes from '#src/routes/appointmentsRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -12,12 +15,12 @@ export class App {
         this.port = process.env.PORT || 3000
         this.apiRoute = '/api/v1'
 
-        this.middlewares()
+        this.middlewares()                  
         this.routes()
-        this.errorHandler()
+        this.errorHandler()                                            
     }
 
-    middlewares() {
+    middlewares() {                   
         this.app.use(morgan(process.env.LOG_FORMAT))
         this.app.use(express.json())
         this.app.use(cors({
@@ -47,6 +50,9 @@ export class App {
         this.app.use(`${this.apiRoute}/roles`, roleRoutes)
         this.app.use(`${this.apiRoute}/pets`, petsRoutes)
         this.app.use(`${this.apiRoute}/auth`, authRoutes)
+        this.app.use(`${this.apiRoute}/species`, specieRoutes)
+        this.app.use(`${this.apiRoute}/breeds`, breedRouters)
+        this.app.use(`${this.apiRoute}/appointments`, appointmentsRoutes)
     }
 
     errorHandler() {
