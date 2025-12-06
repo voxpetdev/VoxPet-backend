@@ -1,4 +1,4 @@
-import BreedModel from "#src/models/breedModel.js"
+import BreedModel from "#src/models/BreedModel.js"
 
 class BreedController {
     constructor() {
