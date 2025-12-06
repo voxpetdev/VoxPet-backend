@@ -16,7 +16,7 @@ class AppointmentsModel {
     async getById(appointmentID) {
         try {
             const res = await tursoApp.execute({
-                sql: "SELECT * FROM specialties WHERE appointmentID= ?",
+                sql: "SELECT * FROM appointments WHERE appointmentID= ?",
                 args: [appointmentID]
             })
             return { code: 200, data: res.rows[0] }
@@ -27,11 +27,11 @@ class AppointmentsModel {
     }
 
     async create(data) {
-        const { date, consultation, place, observations, specialistID, status } = data
+        const { date, consultation, place, observations, petID, userID, status} = data
         try {
             await tursoApp.execute({
-                sql: "INSERT INTO appointments (date, consultation, place, observations, specialistID, status) values (?, ?, ?, ?, ?, ?)",
-                args: [date, consultation, place, observations, specialistID, status]
+                sql: "INSERT INTO appointments (date, consultation, place, observations, petID, userID, status) values (?, ?, ?, ?, ?, ?, ?)",
+                args: [date, consultation, place, observations, petID, userID, status]
             })
 
             return { code: 200, message: 'Created successfully.'
@@ -44,7 +44,7 @@ class AppointmentsModel {
 
     async update(appointmentID, data) {
         try {
-            const { date, consultation, place, observations, specialistID, status} = data
+            const { date, consultation, place, observations, petID, userID, status} = data
 
             const res = await tursoApp.execute({
                 sql: "SELECT * FROM appointments WHERE appointmentID = ?",
@@ -52,8 +52,8 @@ class AppointmentsModel {
             })
 
             await tursoApp.execute({
-                sql: "UPDATE appointments SET date = ?, consultation = ?, place = ?, observations = ?, specialistID = ?, status = ? WHERE appointmentID = ?",
-                args: [date, consultation, place, observations, specialistID, status, appointmentID]
+                sql: "UPDATE appointments SET date = ?, consultation = ?, place = ?, observations = ?, petID=?, userID=?, status = ? WHERE appointmentID = ?",
+                args: [date, consultation, place, observations, petID, userID, status, appointmentID]
             })
 
             return { code: 200, message: " updated successfully." }
