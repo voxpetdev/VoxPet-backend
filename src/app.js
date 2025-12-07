@@ -5,6 +5,7 @@ import petsRoutes from '#src/routes/petsRoutes.js'
 import specieRoutes from '#src/routes/specieRoutes.js'
 import breedRouters from '#src/routes/breedRoutes.js'
 import appointmentsRoutes from '#src/routes/appointmentsRoutes.js'
+import medicalHistoryRoutes from '#src/routes/medicalHistoryRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -53,6 +54,7 @@ export class App {
         this.app.use(`${this.apiRoute}/species`, specieRoutes)
         this.app.use(`${this.apiRoute}/breeds`, breedRouters)
         this.app.use(`${this.apiRoute}/appointments`, appointmentsRoutes)
+        this.app.use(`${this.apiRoute}/medical`, medicalHistoryRoutes)
     }
 
     errorHandler() {

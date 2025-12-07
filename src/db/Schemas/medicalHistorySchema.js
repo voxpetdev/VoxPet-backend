@@ -9,6 +9,7 @@ export const medicalHistory = sqliteTable("medical_history", {
   description: text("description"),
   petID: integer("petID").notNull().references(() => pet.petID),
   observations: text("observations"),
+  status: text("status").notNull(),
   createdAt: integer("createdAt").$defaultFn(() => Date.now()),
   updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
 });
