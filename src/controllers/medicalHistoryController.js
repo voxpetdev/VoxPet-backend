@@ -19,10 +19,10 @@ class MedicalHistoryController {
     getById = async (req, res) => {
         const { id } = req.params
 
-        if (this.cache.has(`pet_${id}`)) {
+        if (this.cache.has(`medical_history_${id}`)) {
             return res.status(200).send({
                 code: 200,
-                data: this.cache.get(`pet_${id}`)
+                data: this.cache.get(`medical_history_${id}`)
             })
         }
 
@@ -31,8 +31,8 @@ class MedicalHistoryController {
             return res.status(404).send(data)
         }
         if (data.code === 200) {
-            this.cache.set(`pet_${id}`, data.data)
-            setTimeout(() => this.cache.delete(`pet_${id}`), 60 * 1000)
+            this.cache.set(`medical_history_${id}`, data.data)
+            setTimeout(() => this.cache.delete(`medical_history_${id}`), 60 * 1000)
         }
 
         return res.status(data.code).send(data)

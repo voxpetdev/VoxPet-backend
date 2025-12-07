@@ -15,6 +15,13 @@
       "when": 1765062249717,
       "tag": "0001_plain_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1765073537045,
+      "tag": "0002_tearful_carlie_cooper",
+      "breakpoints": true
     }
   ]
 }

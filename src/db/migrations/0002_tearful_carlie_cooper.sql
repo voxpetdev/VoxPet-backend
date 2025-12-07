@@ -1,0 +1,1 @@
+ALTER TABLE `users_pets` ADD `status` text NOT NULL;
