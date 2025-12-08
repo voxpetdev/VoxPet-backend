@@ -6,6 +6,8 @@ import specieRoutes from '#src/routes/specieRoutes.js'
 import specialtiesRoutes from '#src/routes/specialtiesRoutes.js'
 import breedRouters from '#src/routes/breedRoutes.js'
 import appointmentsRoutes from '#src/routes/appointmentsRoutes.js'
+import medicalHistoryRoutes from '#src/routes/medicalHistoryRoutes.js'
+import UserPetsRoutes from '#src/routes/userPetsRoutes.js'
 import express from 'express'
 import morgan from 'morgan'
 import cors from 'cors'
@@ -15,7 +17,6 @@ export class App {
         this.app = express()
         this.port = process.env.PORT || 3000
         this.apiRoute = '/api/v1'
-
         this.middlewares()                  
         this.routes()
         this.errorHandler()                                            
@@ -55,6 +56,8 @@ export class App {
         this.app.use(`${this.apiRoute}/specialties`, specialtiesRoutes)
         this.app.use(`${this.apiRoute}/breeds`, breedRouters)
         this.app.use(`${this.apiRoute}/appointments`, appointmentsRoutes)
+        this.app.use(`${this.apiRoute}/medical`, medicalHistoryRoutes)
+        this.app.use(`${this.apiRoute}/userPets`, UserPetsRoutes)
     }
 
     errorHandler() {
