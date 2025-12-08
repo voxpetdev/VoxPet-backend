@@ -13,4 +13,4 @@ export const pet = sqliteTable("pet", {
     status: text("status").default("ACTIVE"),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-});
+})

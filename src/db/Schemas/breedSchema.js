@@ -7,4 +7,4 @@ export const breed = sqliteTable("breed", {
   name: text("name").notNull(),
   createdAt: integer("createdAt").$defaultFn(() => Date.now()),
   updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-});
+})
