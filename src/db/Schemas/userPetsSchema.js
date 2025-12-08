@@ -8,5 +8,4 @@ export const usersPet = sqliteTable("users_pets", {
     petID: integer("petID").notNull().references(() => pet.petID),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-
-});
+})
