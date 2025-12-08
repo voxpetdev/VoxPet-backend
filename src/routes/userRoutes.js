@@ -6,7 +6,7 @@ const router = Router()
 
 router.get('/', verifyToken, UserController.getAll)
 router.post('/', verifyToken, UserController.create)
-router.put('/:id', verifyToken, UserController.update)
+router.patch('/:id', verifyToken, UserController.update)
 router.put('/disable/:id', verifyToken, UserController.disable)
 
 export default router

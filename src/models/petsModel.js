@@ -6,7 +6,6 @@ class PetModel {
     async getAll() {
         try {
             const res = await db.select().from(pet)
-            console.log(res)
             return { code: 200, data: res }
         } catch (error) {
             console.error(error)
@@ -26,8 +25,8 @@ class PetModel {
 
     async create(data) {
         try {
-            await db.insert(pet).values(data)
-            return { code: 200, data }
+            const res = await db.insert(pet).values(data).returning()
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating  pet.' }
@@ -36,9 +35,8 @@ class PetModel {
 
     async update(petID, data) {
         try {
-            await db.update(pet).set(data).where(eq(pet.petID, petID))
-
-            return { code: 200, message: "pet updated successfully." }
+            const res = await db.update(pet).set(data).where(eq(pet.petID, petID)).returning()
+            return { code: 200, data: res }
 
         } catch (error) {
             console.error(error)

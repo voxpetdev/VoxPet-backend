@@ -1,12 +1,12 @@
-import { tursoApp } from "#src/config/turso.config.js"
+import { db } from "#src/db/index.js"
+import { appointments } from "#src/db/Schemas/appointmentsSchema.js"
+import { eq } from "drizzle-orm"
 
 class AppointmentsModel {
     async getAll() {
         try {
-            const res = await tursoApp.execute(`
-        SELECT * FROM appointments
-            `)
-            return { code: 200, data: res.rows }
+            const res = await db.select().from(appointments)
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the appointments." }
@@ -15,11 +15,8 @@ class AppointmentsModel {
     
     async getById(appointmentID) {
         try {
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM appointments WHERE appointmentID= ?",
-                args: [appointmentID]
-            })
-            return { code: 200, data: res.rows[0] }
+            const res = await db.select().from(appointments).where(eq(appointments.appointmentID, appointmentID))
+            return { code: 200, data: res[0] }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the appointment" }
@@ -27,15 +24,9 @@ class AppointmentsModel {
     }
 
     async create(data) {
-        const { date, consultation, place, observations, petID, userID, status} = data
         try {
-            await tursoApp.execute({
-                sql: "INSERT INTO appointments (date, consultation, place, observations, petID, userID, status) values (?, ?, ?, ?, ?, ?, ?)",
-                args: [date, consultation, place, observations, petID, userID, status]
-            })
-
-            return { code: 200, message: 'Created successfully.'
-            }
+            const res = await db.insert(appointments).values(data).returning()
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating .' }
@@ -44,33 +35,18 @@ class AppointmentsModel {
 
     async update(appointmentID, data) {
         try {
-            const { date, consultation, place, observations, petID, userID, status} = data
-
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM appointments WHERE appointmentID = ?",
-                args: [appointmentID]
-            })
-
-            await tursoApp.execute({
-                sql: "UPDATE appointments SET date = ?, consultation = ?, place = ?, observations = ?, petID=?, userID=?, status = ? WHERE appointmentID = ?",
-                args: [date, consultation, place, observations, petID, userID, status, appointmentID]
-            })
-
-            return { code: 200, message: " updated successfully." }
-
+            const res = await db.update(appointments).set(data).where(eq(appointments.appointmentID, appointmentID)).returning()
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error updating." }
         }
     }
 
-    async disable( appointmentID) {
+    async disable(appointmentID) {
         try {
-            await tursoApp.execute({
-                sql: "UPDATE appointments SET status = 'INACTIVE' WHERE appointmentID = ?",
-                args: [ appointmentID]
-            })
-            return { code: 200 }
+            await db.update(appointments).set({ status: "INACTIVE", updatedAt: Date.now() }).where(eq(appointments.appointmentID, appointmentID))
+            return { code: 200, message: "appointment disabled." }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error disabling.' }
