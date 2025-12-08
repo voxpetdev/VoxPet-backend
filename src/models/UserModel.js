@@ -20,8 +20,7 @@ class UserModel {
 
     async create(data) {
         try {
-            await db.insert(users).values({...data, roleID: "b50b032e-58e8-4899-a2ec-004ac2ca50e1" })
-            const user = await db.select().from(users).where(eq(users.email, data.email))
+            const user = await db.insert(users).values({...data, roleID: "2f0a87cb-83e0-4838-bf2d-3a93d992dbfb" }).returning()
             return { code: 200, data: user }
         } catch (error) {
             console.error(error)
@@ -29,7 +28,8 @@ class UserModel {
         }
     }
 
-    async createAsAdmin({name, last_name, email, phone, password}) {
+    async createAsAdmin(data) {
+        const { name, last_name, email, phone, password } = data
         try {
             const { data: authUser, error } = await supabaseAdmin.auth.admin.createUser({
                 email,
@@ -37,9 +37,12 @@ class UserModel {
                 email_confirm: true
             })
 
-            if (error) throw error
+            if (error) {
+                console.error(error)
+                return { code: error.status, message: error.message }
+            }
 
-            const user = await this.create({userID: authUser.user.id, name, last_name, roleID: "2f0a87cb-83e0-4838-bf2d-3a93d992dbfb" , email, phone})
+            const user = await this.create({userID: authUser.user.id, name, last_name, email, phone})
 
             return { code: 200, data: user.data }
         } catch (error) {
@@ -65,14 +68,17 @@ class UserModel {
 
     async disable(userID) {
         try {
-            await tursoApp.execute({
-                sql: 'UPDATE users SET status = INACTIVE WHERE userID = ?',
-                args: [userID]
-            })
-            return { code: 200 }
+            const user = await db.select({ userID: users.userID }).from(users).where(eq(users.userID, userID))
+            if (!user) {
+                console.error(error)
+                return { code: 422, message: "El usuario no existe" }
+            }
+
+            await db.update(users).set({ status: 'INACTIVE', updatedAt: Date.now() }).where(eq(users.userID, userID))
+            return { code: 201 }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error disabling user.' }
+            return { code: 500, message: 'Internal server error' }
         }
     }
 }

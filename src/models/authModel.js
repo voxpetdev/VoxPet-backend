@@ -1,23 +1,17 @@
-import { supabase } from "#src/config/supabase.config.js"
-import { tursoApp } from "#src/config/turso.config.js"
-import jwt from "jsonwebtoken"
 import UserModel from "./UserModel.js"
+import jwt from "jsonwebtoken"
+
+import { supabase } from "#src/config/supabase.config.js"
+import { db } from "#src/db/index.js"
+import { users } from "#src/db/Schemas/usersSchema.js"
+import { roles } from "#src/db/Schemas/rolesSchema.js"
+import { eq } from "drizzle-orm"
 
 class AuthModel {
     constructor() {}
 
     generateToken(user) {
-        return jwt.sign(
-            {
-                name: user.name,
-                last_name: user.last_name,
-                email: user.email,
-                role: user.role,
-                phone: user.phone
-            },
-            process.env.JWT_SECRET,
-            { expiresIn: "1h" }
-        )
+        return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: "1h" })
     }
 
     async register(userData) {
@@ -29,7 +23,10 @@ class AuthModel {
             password: password
         })
 
-        if (error) return { code: 400, message: error.message }
+        if (error) {
+            console.error(error)
+            return { code: error.status, message: error.message }
+        }
 
         if (data) {
             const userCreated = await UserModel.create({ userID: data.user.id, ...userData })
@@ -56,31 +53,28 @@ class AuthModel {
         if (error) {
             console.error(error)
             return {
-                code: 500,
-                message: "Error Signning In"
+                code: error.status,
+                message: error.message
             }
         }
 
-        const query = await tursoApp.execute(`SELECT u.name name, u.last_name last_name, r.name role, u.phone phone FROM users u LEFT JOIN roles r ON u.roleID = r.roleID WHERE userID = '${data.user.id}'`)
-
-        const userData = query.rows[0]
-
-        const user = {
-            name: userData.name,
-            last_name: userData.last_name,
-            email: data.user.email,
-            role: userData.role,
-            phone: userData.phone
-        }
+        const user = await db.select({
+            userID: users.userID,
+            name: users.name,
+            last_name: users.last_name,
+            email: users.email,
+            role: roles.name,
+            phone: users.phone
+        }).from(users).where(eq(users.userID, data.user.id)).leftJoin(roles, eq(users.roleID, roles.roleID))
 
         return {
-            code: 201,
-            access_token: this.generateToken(user)
+            code: 200,
+            access_token: this.generateToken(user[0])
         }
     }
 
     async resetRequest(email) {
-        const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+        const { _, error } = await supabase.auth.resetPasswordForEmail(email, {
             redirectTo: 'https://vox-pet-web.vercel.app/update-password'
         })
 

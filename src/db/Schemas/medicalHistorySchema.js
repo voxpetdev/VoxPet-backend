@@ -12,4 +12,4 @@ export const medicalHistory = sqliteTable("medical_history", {
   status: text("status").notNull(),
   createdAt: integer("createdAt").$defaultFn(() => Date.now()),
   updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-});
+})

@@ -14,6 +14,7 @@ export const users = sqliteTable('users', {
     specialtyID: text("specialtyID").references(() => specialties.specialtyID),
     phone: text("phone").notNull(),
     address: text("address"),
+    status: text("status").default("INACTIVE"),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
 })

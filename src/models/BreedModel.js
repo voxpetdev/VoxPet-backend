@@ -1,12 +1,12 @@
-import { tursoApp } from "#src/config/turso.config.js"
+import { db } from "../db/index.js"
+import { breed } from "#src/db/Schemas/breedSchema.js"
+import { eq } from "drizzle-orm"
 
 class BreedModel {
     async getAll() {
         try {
-            const res = await tursoApp.execute(`
-        SELECT * FROM breed
-            `)
-            return { code: 200, data: res.rows }
+            const res = await db.select().from(breed)
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the breed." }
@@ -15,11 +15,8 @@ class BreedModel {
     
     async getById(breedID) {
         try {
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM breed WHERE breedID= ?",
-                args: [breedID]
-            })
-            return { code: 200, data: res.rows[0] }
+            const res = await db.select().from(breed).where(eq(breed.breedID, breedID))
+            return { code: 200, data: res[0] }
         } catch (error) {
             console.error(error)
             return { code: 500, message: "Error getting the breedID." }
@@ -27,15 +24,10 @@ class BreedModel {
     }
 
     async create(data) {
-        const { specieID, name } = data
         try {
-            await tursoApp.execute({
-                sql: "INSERT INTO breed (specieID, name) values (?, ?)",
-                args: [ specieID, name]
-            })
+            const res = await db.insert(breed).values(data).returning()
 
-            return { code: 200, message: 'breed created successfully.'
-            }
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
             return { code: 500, message: 'Error creating the breed.' }
@@ -44,24 +36,8 @@ class BreedModel {
 
     async update(breedID, data) {
     try {
-        const { specieID, name } = data
-
-        const res = await tursoApp.execute({
-            sql: "SELECT * FROM breed WHERE breedID = ?",
-            args: [breedID]
-        })
-
-        if (res.rows.length < 1) {
-            return { code: 404, message: "Breed not found." }
-        }
-
-        await tursoApp.execute({
-            sql: "UPDATE breed SET specieID = ?, name = ? WHERE breedID = ?",
-            args: [specieID, name, breedID]
-        })
-
-        return { code: 200, message: "Breed updated successfully." }
-
+        const res = await db.update(breed).set(data).where(eq(breed.breedID, breedID)).returning()
+        return { code: 200, data: res }
     } catch (error) {
         console.error(error)
         return { code: 500, message: "Error updating breed." }
@@ -70,15 +46,11 @@ class BreedModel {
 
    async disable(breedID) {
     try {
-        await tursoApp.execute({
-            sql: "DELETE FROM breed WHERE breedID = ?",
-            args: [breedID]
-        });
-
-        return { code: 200, message: "breed deleted." };
+        await db.update(breed).set({ status: "INACTIVE", updatedAt: Date.now() }).where(eq(breed.breedID, breedID))
+        return { code: 200, message: "breed disabled." };
     } catch (error) {
         console.log(error);
-        return { code: 500, message: "Error deleting breed." };
+        return { code: 500, message: "Error disabling breed." };
     }
 }
 }

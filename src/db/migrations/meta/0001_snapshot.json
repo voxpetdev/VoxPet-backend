@@ -1,7 +1,11 @@
 {
   "version": "6",
   "dialect": "sqlite",
+<<<<<<< HEAD
+  "id": "969975bc-e66c-4e45-9d9c-52d2f2c2ab10",
+=======
   "id": "8e153579-cc02-45bc-aece-bd8fed1c13a6",
+>>>>>>> 026fcd8ae745ea607c49aae81ac2ae7e9748a3a0
   "prevId": "5733b5a3-1006-441b-a84f-7bfa481fed88",
   "tables": {
     "roles": {
@@ -125,6 +129,17 @@
           "notNull": false,
           "autoincrement": false
         },
+<<<<<<< HEAD
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false,
+          "default": "'INACTIVE'"
+        },
+=======
+>>>>>>> 026fcd8ae745ea607c49aae81ac2ae7e9748a3a0
         "createdAt": {
           "name": "createdAt",
           "type": "integer",
@@ -611,6 +626,8 @@
           "notNull": false,
           "autoincrement": false
         },
+<<<<<<< HEAD
+=======
         "status": {
           "name": "status",
           "type": "text",
@@ -618,6 +635,7 @@
           "notNull": true,
           "autoincrement": false
         },
+>>>>>>> 026fcd8ae745ea607c49aae81ac2ae7e9748a3a0
         "createdAt": {
           "name": "createdAt",
           "type": "integer",

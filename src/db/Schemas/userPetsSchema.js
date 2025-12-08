@@ -9,5 +9,4 @@ export const usersPet = sqliteTable("users_pets", {
     status: text("status").notNull(),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-
-});
+})
