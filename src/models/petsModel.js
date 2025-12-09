@@ -1,11 +1,16 @@
+import userPetsModel from "./userPetsModel.js"
+import { usersPet } from "#src/db/Schemas/userPetsSchema.js"
 import { pet } from "#src/db/Schemas/petSchema.js"
 import { db } from "../db/index.js"
 import { eq } from "drizzle-orm"
 
 class PetModel {
-    async getAll() {
+    async getAll(userID) {
         try {
-            const res = await db.select().from(pet)
+            const res = await db
+                .select()
+                .from(usersPet).innerJoin(pet, eq(usersPet.petID, pet.petID))
+                .where(eq(usersPet.userID, userID))
             return { code: 200, data: res }
         } catch (error) {
             console.error(error)
@@ -13,7 +18,7 @@ class PetModel {
         }
     }
     
-    async getById(petID) {
+    async getById(petID, userID) {
         try {
             const res = await db.select().from(pet).where(eq(pet.petID, petID))
             return { code: 200, data: res }
@@ -23,19 +28,21 @@ class PetModel {
         }
     }
 
-    async create(data) {
+    async create(data, userID) {
         try {
-            const res = await db.insert(pet).values(data).returning()
-            return { code: 200, data: res }
+            const newPet = await db.insert(pet).values(data).returning()
+            const petOwner = await userPetsModel.create({userID: userID, petID: newPet[0].petID})
+
+            return { code: 200, data: [newPet[0], petOwner] }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error creating  pet.' }
+            return { code: 500, message: 'Error creating pet.' }
         }
     }
 
     async update(petID, data) {
         try {
-            const res = await db.update(pet).set(data).where(eq(pet.petID, petID)).returning()
+            const res = await db.update(pet).set({...data, updatedAt: Date.now()}).where(eq(pet.petID, petID)).returning()
             return { code: 200, data: res }
 
         } catch (error) {
@@ -46,11 +53,8 @@ class PetModel {
 
     async disable(petID) {
         try {
-            const res = await db.update(pet).set({ status: "INACTIVE" }).where(eq(pet.petID, petID))
-            if (res.rowsAffected < 1) {
-                return { code: 404, message: "La mascota no se encuentra o no existe" }
-            }
-            return { code: 200, message: "Mascota inhabilitada" }
+            await db.update(pet).set({ status: "INACTIVE", updatedAt: Date.now() }).where(eq(pet.petID, petID))
+            return { code: 201 }
         } catch (error) {
             console.error(error)
             return {

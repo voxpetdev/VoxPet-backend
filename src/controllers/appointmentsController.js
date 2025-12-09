@@ -1,23 +1,8 @@
 import AppointmentsModel from "#src/models/appointmentsModel.js"
 
 class AppointmensController {
-    constructor() {
-        this.cache = new Map()
-    }
-
-    getAll = async (req, res) => {
-        if (this.cache.has('appointment')) {
-            return res.status(200).send({
-                code: 200,
-                data: this.cache.get('appointment')
-            })
-        }
-
+    getAll = async (_, res) => {
         const data = await AppointmentsModel.getAll()
-        this.cache.set('appointment', data.data)
-
-        setTimeout(() => this.cache.delete('appointment'), 60 * 1000)
-
         res.status(data.code).send(data)
     }
 

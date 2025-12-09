@@ -1,79 +1,54 @@
-import { tursoApp } from "#src/config/turso.config.js"
+import { db } from "#src/db/index.js"
+import { usersPet } from "#src/db/Schemas/userPetsSchema.js"
 
 class UserPetsModel {
     async getAll() {
         try {
-            const res = await tursoApp.execute(`
-        SELECT * FROM users_pets
-            `)
-            return { code: 200, data: res.rows }
+            const res = await db.select().from(usersPet)
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: "Error getting the users_pets." }
+            return { code: 500, message: "Error getting the pet owners." }
         }
     }
     
     async getById(users_petsID) {
         try {
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM users_pets WHERE users_petsID= ?",
-                args: [users_petsID]
-            })
-            return { code: 200, data: res.rows[0] }
+            const res = await db.select().from(usersPet).where(eq(usersPet.users_petsID, users_petsID))
+            return { code: 200, data: res[0] }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: "Error getting " }
+            return { code: 500, message: "Error getting pet owner" }
         }
     }
 
     async create(data) {
-        const { userID, petID,  status} = data
         try {
-            await tursoApp.execute({
-                sql: "INSERT INTO users_pets ( userID, petID,  status) values (?, ?, ?)",
-                args: [ userID, petID,  status]
-            })
-
-            return { code: 200, message: 'Created successfully.'
-            }
+            const res = await db.insert(usersPet).values(data).returning()
+            return { user_pet: res[0] }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error creating .' }
+            return { code: 500, message: 'Error creating pet owner.' }
         }
     }
 
     async update(users_petsID, data) {
         try {
-            const {  userID, petID,  status} = data
-
-            const res = await tursoApp.execute({
-                sql: "SELECT * FROM users_pets WHERE users_petsID = ?",
-                args: [users_petsID]
-            })
-
-            await tursoApp.execute({
-                sql: "UPDATE users_pets SET userID=?, petID=?,  status=? WHERE users_petsID = ?",
-                args: [ userID, petID,  status, users_petsID]
-            })
-
-            return { code: 200, message: " updated successfully." }
-
+            const res = await db.update(usersPet).set({...data, updatedAt: Date.now()}).where(eq(usersPet.users_petsID, users_petsID)).returning()
+            return { code: 200, data: res }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: "Error updating." }
+            return { code: 500, message: "Error updating pet owner." }
         }
     }
 
-    async disable( users_petsID) {
+    async disable(users_petsID) {
         try {
-            await tursoApp.execute({
-                sql: "UPDATE users_pets SET status = 'INACTIVE' WHERE users_petsID = ?",
-                args: [ users_petsID]
-            })
-            return { code: 200 }
+            await db.update(usersPet).set({ status: "INACTIVE", updatedAt: Date.now() }).where(eq(usersPet.users_petsID, users_petsID))
+            return { code: 201 }
         } catch (error) {
             console.error(error)
-            return { code: 500, message: 'Error disabling.' }
+            return { code: 500, message: 'Error disabling owner.' }
         }
     }
 

@@ -6,7 +6,7 @@ export const usersPet = sqliteTable("users_pets", {
     users_petsID: integer("users_petsID").primaryKey(),
     userID: integer("userID").notNull().references(() => users.userID),
     petID: integer("petID").notNull().references(() => pet.petID),
-    status: text("status").notNull(),
+    status: text("status").default("ACTIVE").notNull(),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
 })
