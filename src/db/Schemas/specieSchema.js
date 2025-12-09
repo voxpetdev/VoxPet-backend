@@ -5,4 +5,4 @@ export const specie = sqliteTable("specie", {
   name: text("name").notNull(),
   createdAt: integer("createdAt").$defaultFn(() => Date.now()),
   updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-});
+})

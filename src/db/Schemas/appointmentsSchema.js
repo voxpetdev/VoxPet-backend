@@ -2,7 +2,7 @@ import { sqliteTable, integer, text } from "drizzle-orm/sqlite-core";
 import { pet } from "./petSchema.js";
 import { users } from "./usersSchema.js";
 
-export const appointments= sqliteTable("appointments", {
+export const appointments = sqliteTable("appointments", {
     appointmentID: integer("appointmentID").primaryKey(),
     date: text("date").notNull(),
     consultation: text("consultation"),
@@ -13,5 +13,4 @@ export const appointments= sqliteTable("appointments", {
     status: text("status").notNull(),
     createdAt: integer("createdAt").$defaultFn(() => Date.now()),
     updatedAt: integer("updatedAt").$defaultFn(() => Date.now())
-
-});
+})
